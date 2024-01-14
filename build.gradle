@@ -66,5 +66,5 @@ tasks.named('test') {
 }
 
 tasks.named('bootJar'){
-    mainClass = 'com.github.shoppingmallproject.ShoppingMallProjectApplication'
+    mainClass = 'com.example.foodplacebe.FoodPlaceBeApplication'
 }
