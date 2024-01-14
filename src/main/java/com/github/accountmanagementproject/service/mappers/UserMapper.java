@@ -4,6 +4,7 @@ import com.github.accountmanagementproject.repository.userRoles.Roles;
 import com.github.accountmanagementproject.repository.userRoles.UserRoles;
 import com.github.accountmanagementproject.repository.users.UserEntity;
 import com.github.accountmanagementproject.web.dto.account.AccountDto;
+import com.github.accountmanagementproject.web.dto.account.AccountPatchDto;
 import com.github.accountmanagementproject.web.dto.account.SignUpRequest;
 import com.github.accountmanagementproject.web.dto.account.SignUpResponse;
 import org.mapstruct.Mapper;
@@ -32,6 +33,10 @@ public interface UserMapper {
     @Mapping(target = "userRoles", ignore = true)
     @Mapping(target = "joinDate", ignore = true)
     UserEntity AccountDTOToUserEntity(AccountDto accountDTO);
+
+    @Mapping(target = "userRoles", ignore = true)
+    @Mapping(target = "joinDate", ignore = true)
+    UserEntity AccountPatchDtoToUserEntity(AccountPatchDto accountDTO);
 
     default String formatting(LocalDateTime localDateTime){
         if( localDateTime != null ){

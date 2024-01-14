@@ -10,6 +10,7 @@ import com.github.accountmanagementproject.service.customExceptions.DuplicateKey
 import com.github.accountmanagementproject.service.customExceptions.NotFoundException;
 import com.github.accountmanagementproject.service.mappers.UserMapper;
 import com.github.accountmanagementproject.web.dto.account.AccountDto;
+import com.github.accountmanagementproject.web.dto.account.AccountPatchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
@@ -44,7 +45,7 @@ public class AccountService {
     }
 
     @Transactional(transactionManager = "tm")
-    public AccountDto patchMyInfo(CustomUserDetails customUserDetails, AccountDto accountDTO) {
+    public AccountDto patchMyInfo(CustomUserDetails customUserDetails, AccountPatchDto accountDTO) {
         String loggedEmail = customUserDetails.getUsername();
         String email = accountDTO.getEmail();
         String phoneNumber = accountDTO.getPhoneNumber();
@@ -70,7 +71,7 @@ public class AccountService {
         UserEntity existingUser = userJpa.findByEmail(customUserDetails.getUsername());
 //        List<Roles> roles = accountDTO.getUserRoles().stream()
 //                .map(rn->rolesJpa.findByName(rn)).toList();//롤변경시 필요
-        UserEntity updateUser = UserMapper.INSTANCE.AccountDTOToUserEntity(accountDTO);
+        UserEntity updateUser = UserMapper.INSTANCE.AccountPatchDtoToUserEntity(accountDTO);
 
         if(accountDTO.getPassword()==null) throw new CustomBindException("현재 비밀번호를 입력해 주세요.","");
 

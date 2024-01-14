@@ -3,6 +3,7 @@ package com.github.accountmanagementproject.web.controller.authAccount;
 import com.github.accountmanagementproject.repository.userDetails.CustomUserDetails;
 import com.github.accountmanagementproject.service.authAccount.AccountService;
 import com.github.accountmanagementproject.web.dto.account.AccountDto;
+import com.github.accountmanagementproject.web.dto.account.AccountPatchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class AccountController {
     }
 
     @PatchMapping("/my-page")
-    public AccountDto patchMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody AccountDto accountDTO){
+    public AccountDto patchMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody AccountPatchDto accountDTO){
         return accountService.patchMyInfo(customUserDetails, accountDTO);
     }
 
