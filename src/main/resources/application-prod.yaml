@@ -9,6 +9,9 @@ datasource:
     show-sql: true
 
 spring:
+  config:
+    activate:
+      on-profile: prod
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -21,4 +24,4 @@ logging:
   level:
     org.hibernate.SQL: debug
 server:
-  port: 8079
+  port: 8080
