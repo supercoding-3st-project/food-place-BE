@@ -1,0 +1,31 @@
+datasource:
+  username: ${DATABASE_USERNAME}
+  password: ${DATABASE_PASSWORD}
+  driver-class-name: org.mariadb.jdbc.Driver
+  url: jdbc:mariadb://database-1.cvyclyh4jg14.ap-northeast-2.rds.amazonaws.com:3306/food_place_project
+
+jwtpassword:
+  source: ${JWT_CODE}
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: d7453d5d4fe1c096ca03c1ed009a03ff
+            client-secret: K5U5BQQ9UdpwJvlPC0lP8mWBGQxXTe85
+            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"   # (3)
+            client-authentication-method: client_secret_post                                # (4)
+            authorization-grant-type: authorization_code                      # (5)
+            scope: profile_nickname, profile_image, account_email                            # ?? ?? (6)
+            client-name: Kakao                                                # (7)
+        provider:
+          kakao:
+            authorization_uri: https://kauth.kakao.com/oauth/authorize        # (8)
+            token_uri: https://kauth.kakao.com/oauth/token                    # (9)
+            user-info-uri: https://kapi.kakao.com/v2/user/me                  # (10)
+            user_name_attribute: id                                           # (11)
