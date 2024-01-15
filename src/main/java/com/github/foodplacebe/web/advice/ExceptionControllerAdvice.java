@@ -3,6 +3,7 @@ package com.github.foodplacebe.web.advice;
 import com.github.foodplacebe.service.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -60,4 +61,11 @@ public class ExceptionControllerAdvice {
         return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),HttpStatus.UNAUTHORIZED.name(),
                 ex.getDetailMessage(), ex.getRequest());
     }
+    @ExceptionHandler(OAuth2AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleOAuth2Exception(OAuth2AuthenticationException ex) {
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),HttpStatus.UNAUTHORIZED.name(),
+                ex.getMessage(), "");
+    }
+
 }

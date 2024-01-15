@@ -125,7 +125,7 @@ public class SignUpLoginService {
                     String minute = String.valueOf(duration.toMinutes());
                     String seconds = String.valueOf(duration.minusMinutes(duration.toMinutes()).getSeconds());
                     throw new AccountLockedException(String.format(
-                            "\"%s\"님의 계정이 비밀번호 5회 실패로 잠겼습니다. 남은 시간 : %s분 %s초", userEntity.getEmail(),minute,seconds
+                            "'%s'님의 계정이 비밀번호 5회 실패로 잠겼습니다. 남은 시간 : %s분 %s초", userEntity.getName(),minute,seconds
                     ), loginRequest.getPassword());
                 }
             }

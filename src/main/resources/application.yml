@@ -7,6 +7,14 @@ datasource:
 jwtpassword:
   source: ${JWT_CODE}
 
+
+oauth:
+  kakao:
+    client-id: d7453d5d4fe1c096ca03c1ed009a03ff
+    url:
+      auth: https://kauth.kakao.com
+      api: https://kapi.kakao.com
+
 spring:
   mvc:
     pathmatch:

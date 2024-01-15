@@ -24,6 +24,8 @@ public interface UserMapper {
 
     @Mapping(target = "joinDate", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "dateOfBirth", expression = "java(birthFormatting(signUpRequest.getDateOfBirth()))")
+    @Mapping(target = "failureCount", expression = "java(0)")
+    @Mapping(target = "status", expression = "java(\"normal\")")
     UserEntity signUpRequestToUserEntity(SignUpRequest signUpRequest);
     @Mapping(target = "joinDate", expression = "java(formatting(userEntity.getJoinDate()))")
     SignUpResponse userEntityToSignUpResponse(UserEntity userEntity);

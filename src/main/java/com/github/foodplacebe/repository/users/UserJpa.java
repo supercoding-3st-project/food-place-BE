@@ -17,7 +17,16 @@ public interface UserJpa extends JpaRepository<UserEntity, Integer> {
     boolean existsByNickNameAndEmailNot(String nickName, String loggedEmail);
 
 
-    com.github.foodplacebe.repository.users.UserEntity findByEmail(String email);
+    UserEntity findByEmail(String email);
+
+    @Query(
+            "SELECT ue " +
+                    "FROM UserEntity ue " +
+                    "JOIN FETCH ue.userRoles uer " +
+                    "JOIN FETCH uer.roles " +
+                    "WHERE ue.socialId = :socialId"
+    )
+    UserEntity findBySocialIdJoin(Long socialId);
 
     @Query(
             "SELECT ue " +
@@ -26,7 +35,7 @@ public interface UserJpa extends JpaRepository<UserEntity, Integer> {
                     "JOIN FETCH uer.roles " +
                     "WHERE ue.phoneNumber = ?1"
     )
-    Optional<com.github.foodplacebe.repository.users.UserEntity> findByPhoneNumberJoin(String phoneNumber);
+    Optional<UserEntity> findByPhoneNumberJoin(String phoneNumber);
 
 
     @Query(
@@ -36,7 +45,7 @@ public interface UserJpa extends JpaRepository<UserEntity, Integer> {
             "JOIN FETCH uer.roles " +
             "WHERE ue.email = :email"
     )
-    Optional<com.github.foodplacebe.repository.users.UserEntity> findByEmailJoin(String email);
+    Optional<UserEntity> findByEmailJoin(String email);
 
     @Query(
             "SELECT ue " +
@@ -45,6 +54,6 @@ public interface UserJpa extends JpaRepository<UserEntity, Integer> {
                     "JOIN FETCH uer.roles " +
                     "WHERE ue.nickName = :nickName"
     )
-    Optional<com.github.foodplacebe.repository.users.UserEntity> findByNickNameJoin(String nickName);
+    Optional<UserEntity> findByNickNameJoin(String nickName);
 
 }

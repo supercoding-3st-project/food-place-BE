@@ -30,6 +30,12 @@ public class SignUpLoginController {
     public String signUp(@RequestBody SignUpRequest signUpRequest){
         return signUpLoginService.signUp(signUpRequest);
     }
+    @GetMapping("/sign-up")
+    public String redirectToSignUpPage() {
+        return "redirect:/untitled/Test/signup.html?_ijt=5tikatvivfra30akbkui2id0da&_ij_reload=RELOAD_ON_SAVE";
+    }
+
+
 
     @GetMapping("/sign-up/check-email")
     public boolean checkEmail(HttpServletRequest httpServletRequest){

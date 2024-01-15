@@ -21,7 +21,7 @@ public class UserEntity {
     @Column(name = "user_id")
     private Integer userId;
     @Column(name = "social_id", unique = true)
-    private Integer socialId;
+    private Long socialId;
 
     @Column(name = "name", nullable = false)
     private String name;

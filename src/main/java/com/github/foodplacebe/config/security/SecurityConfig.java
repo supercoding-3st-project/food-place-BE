@@ -2,8 +2,10 @@ package com.github.foodplacebe.config.security;
 
 import com.github.foodplacebe.config.security.exception.CustomAccessDeniedHandler;
 import com.github.foodplacebe.config.security.exception.CustomAuthenticationEntryPoint;
+import com.github.foodplacebe.service.security.CustomOAuth2UserService;
 import com.github.foodplacebe.service.security.CustomUserDetailsService;
 import com.github.foodplacebe.web.filters.JwtFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtTokenConfig jwtTokenConfig;
-    private final CustomUserDetailsService customUserDetailsService;
+    private final CustomOAuth2UserService customOAuth2UserService;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -38,10 +40,16 @@ public class SecurityConfig {
                 .httpBasic((h)->h.disable())
                 .formLogin(f->f.disable())
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("http://localhost:63342/untitled/Test/test.html?_ijt=gbnp322r761hm73phne60qiig3&_ij_reload=RELOAD_ON_SAVE")
+                        .loginPage("/")
+                                .defaultSuccessUrl("/success")
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customUserDetailsService)
+                                .userService(customOAuth2UserService)
                         )
+//                        .failureHandler((request, response, exception) -> {
+//                            response.sendError(HttpServletResponse.SC_GONE, "로그인실패");
+//                            exception.printStackTrace();
+//                            System.out.println(request.getAttribute("id"));
+//                        })
                 )
 
                 .rememberMe(r->r.disable())
@@ -54,10 +62,11 @@ public class SecurityConfig {
                 .exceptionHandling(e->{
                     e.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
                     e.accessDeniedHandler(new CustomAccessDeniedHandler());
+
                 })
                 .authorizeRequests(a ->
                             a
-                                    .requestMatchers("/resources/static/**", "/auth/*").permitAll()
+                                    .requestMatchers("/resources/static/**", "/auth/*","/").permitAll()
 
                 )
                 .logout(l->{

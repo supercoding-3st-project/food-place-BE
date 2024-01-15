@@ -39,7 +39,7 @@ public class AuthenticationListener {
 //                throw new AccountLockedException(result.get("name"),result.get("minute"),result.get("seconds"));
                 throw new AccountLockedException(
                         String.format(
-                        "\"%s\"님의 계정이 비밀번호 5회 실패로 잠겼습니다. 남은 시간 : %s분 %s초", result.get("name"),result.get("minute"),result.get("seconds")
+                        "'%s'님의 계정이 비밀번호 5회 실패로 잠겼습니다. 남은 시간 : %s분 %s초", result.get("name"),result.get("minute"),result.get("seconds")
                         ), wrongPassword);
             }
         }
