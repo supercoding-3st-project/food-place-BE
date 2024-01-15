@@ -1,7 +1,6 @@
 package com.github.foodplacebe.service.authAccount;
 
 import com.github.foodplacebe.config.security.JwtTokenConfig;
-import com.github.foodplacebe.config.security.KakaoOauthClient;
 import com.github.foodplacebe.repository.userDetails.KakaoMemberResponse;
 import com.github.foodplacebe.repository.userRoles.Roles;
 import com.github.foodplacebe.repository.userRoles.RolesJpa;
@@ -35,7 +34,7 @@ public class SocialSignUpService {
     private final RolesJpa rolesJpa;
     private final UserRolesJpa userRolesJpa;
 
-    private final KakaoOauthClient kakaoOauthClient;
+//    private final KakaoOauthClient kakaoOauthClient;
 //    private final AuthenticationManager authenticationManager;
 
     public void throwingException(String message ,String request){
@@ -129,12 +128,12 @@ public class SocialSignUpService {
                 "가입 날짜 : "+signUpResponse.getJoinDate();
     }
 
-    public String getToken(final String code) {
-        final String accessToken = kakaoOauthClient.getAccessToken(code);
-        final KakaoMemberResponse response = kakaoOauthClient.getMemberInfo(accessToken);
-        return null;
-
-    }
+//    public String getToken(final String code) {
+//        final String accessToken = kakaoOauthClient.getAccessToken(code);
+//        final KakaoMemberResponse response = kakaoOauthClient.getMemberInfo(accessToken);
+//        return null;
+//
+//    }
 
 //    public String test(String token) {
 //        OAuth2UserRequest oAuth2UserRequest = new OAuth2UserRequest();
