@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SocialController {
     private final SocialSignUpService socialSignUpService;
-    @GetMapping("/kakao")
-    public String kakaoLogin (@RequestParam final String code){
-        return socialSignUpService.getToken(code);
-    }
+//    @GetMapping("/kakao")
+//    public String kakaoLogin (@RequestParam final String code){
+//        return socialSignUpService.getToken(code);
+//    }
     @GetMapping("/")
     public String home() {
         return "index";
