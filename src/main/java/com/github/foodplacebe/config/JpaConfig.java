@@ -25,11 +25,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 @EnableJpaRepositories(
         basePackages = {
-                "com.github.foodplacebe.repository.commentFavorite",
-                "com.github.foodplacebe.repository.comments",
-                "com.github.foodplacebe.repository.postFavorite",
-                "com.github.foodplacebe.repository.postPhotos",
-                "com.github.foodplacebe.repository.posts",
+//                "com.github.foodplacebe.repository.commentFavorite",
+//                "com.github.foodplacebe.repository.comments",
+//                "com.github.foodplacebe.repository.postFavorite",
+//                "com.github.foodplacebe.repository.postPhotos",
+//                "com.github.foodplacebe.repository.posts",
                 "com.github.foodplacebe.repository.users",
                 "com.github.foodplacebe.repository.userRoles"
         },
@@ -52,11 +52,11 @@ public class JpaConfig {
         LocalContainerEntityManagerFactoryBean lemfb = new LocalContainerEntityManagerFactoryBean();
         lemfb.setDataSource(datasource);
         lemfb.setPackagesToScan(
-                "com.github.foodplacebe.repository.commentFavorite",
-                "com.github.foodplacebe.repository.comments",
-                "com.github.foodplacebe.repository.postFavorite",
-                "com.github.foodplacebe.repository.postPhotos",
-                "com.github.foodplacebe.repository.posts",
+//                "com.github.foodplacebe.repository.commentFavorite",
+//                "com.github.foodplacebe.repository.comments",
+//                "com.github.foodplacebe.repository.postFavorite",
+//                "com.github.foodplacebe.repository.postPhotos",
+//                "com.github.foodplacebe.repository.posts",
                 "com.github.foodplacebe.repository.users",
                 "com.github.foodplacebe.repository.userRoles"
         );
