@@ -66,7 +66,7 @@ public class SecurityConfig {
                 })
                 .authorizeRequests(a ->
                             a
-                                    .requestMatchers("/resources/static/**", "/auth/*","/").permitAll()
+                                    .requestMatchers("/resources/static/**","/v1/api/test", "/auth/*","/").permitAll()
 
                 )
                 .logout(l->{
