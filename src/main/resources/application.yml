@@ -11,29 +11,13 @@ jwtpassword:
 oauth:
   kakao:
     client-id: d7453d5d4fe1c096ca03c1ed009a03ff
+    secret: K5U5BQQ9UdpwJvlPC0lP8mWBGQxXTe85
     url:
       auth: https://kauth.kakao.com
       api: https://kapi.kakao.com
+      redirect-uri: http://localhost:8080/api/auth/kakao
 
 spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  security:
-    oauth2:
-      client:
-        registration:
-          kakao:
-            client-id: d7453d5d4fe1c096ca03c1ed009a03ff
-            client-secret: K5U5BQQ9UdpwJvlPC0lP8mWBGQxXTe85
-            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"   # (3)
-            client-authentication-method: client_secret_post                                # (4)
-            authorization-grant-type: authorization_code                      # (5)
-            scope: profile_nickname, profile_image, account_email                            # ?? ?? (6)
-            client-name: Kakao                                                # (7)
-        provider:
-          kakao:
-            authorization_uri: https://kauth.kakao.com/oauth/authorize        # (8)
-            token_uri: https://kauth.kakao.com/oauth/token                    # (9)
-            user-info-uri: https://kapi.kakao.com/v2/user/me                  # (10)
-            user_name_attribute: id                                           # (11)

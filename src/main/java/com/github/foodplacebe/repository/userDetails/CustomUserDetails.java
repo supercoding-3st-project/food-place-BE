@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomUserDetails implements UserDetails, OAuth2User {
+public class CustomUserDetails implements UserDetails {
     @Getter
     private Integer userId;
     @Getter
@@ -33,14 +32,6 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
 
     private Map<String, Object> attributes;
-    @Override
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
-    @Override
-    public String getName() {
-        return this.name;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

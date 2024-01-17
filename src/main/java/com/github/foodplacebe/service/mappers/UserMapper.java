@@ -62,7 +62,7 @@ public interface UserMapper {
 
     default Collection<UserRoles> getRoles(List<Roles> roles) {
         return roles.stream()
-                .map(role->{//롤 변경시 사용
+                .map(role->{
                     UserRoles userRoles = new UserRoles();
                     userRoles.setRoles(role);
                     return userRoles;

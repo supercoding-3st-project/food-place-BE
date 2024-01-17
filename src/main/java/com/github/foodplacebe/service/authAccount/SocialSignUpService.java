@@ -1,7 +1,8 @@
 package com.github.foodplacebe.service.authAccount;
 
 import com.github.foodplacebe.config.security.JwtTokenConfig;
-import com.github.foodplacebe.repository.userDetails.KakaoMemberResponse;
+import com.github.foodplacebe.web.dto.account.oauth.server.OAuthInfoResponse;
+import com.github.foodplacebe.web.dto.account.oauth.client.OAuthLoginParams;
 import com.github.foodplacebe.repository.userRoles.Roles;
 import com.github.foodplacebe.repository.userRoles.RolesJpa;
 import com.github.foodplacebe.repository.userRoles.UserRoles;
@@ -10,22 +11,11 @@ import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
 import com.github.foodplacebe.service.exceptions.*;
 import com.github.foodplacebe.service.mappers.UserMapper;
-import com.github.foodplacebe.web.dto.account.LoginRequest;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
 import com.github.foodplacebe.web.dto.account.SignUpResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +23,8 @@ public class SocialSignUpService {
     private final UserJpa userJpa;
     private final RolesJpa rolesJpa;
     private final UserRolesJpa userRolesJpa;
+    private final JwtTokenConfig jwtTokenConfig;
+    private final RequestOAuthInfoService requestOAuthInfoService;
 
 //    private final KakaoOauthClient kakaoOauthClient;
 //    private final AuthenticationManager authenticationManager;
@@ -139,4 +131,33 @@ public class SocialSignUpService {
 //        OAuth2UserRequest oAuth2UserRequest = new OAuth2UserRequest();
 //        customUserDetailsService.loadUser()
 //    }
+
+
+
+    public String login(OAuthLoginParams params) {
+        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
+        String email =oAuthInfoResponse.getEmail();
+        String profileImg = oAuthInfoResponse.getProfileImg();
+        String socialProvider = oAuthInfoResponse.getOAuthProvider().name();
+        String nickname = oAuthInfoResponse.getNickName();
+        return null;
+    }
+
+    private Integer findOrCreateMember(OAuthInfoResponse oAuthInfoResponse) {
+        return userJpa.findByEmailJoin(oAuthInfoResponse.getEmail())
+                .map(ue->ue.getUserId())
+                .orElseGet(() -> 1);
+    }
+
+    private Long newMember(OAuthInfoResponse oAuthInfoResponse) {
+//        UserEntity userEntity = Member.builder()
+//                .email(oAuthInfoResponse.getEmail())
+//                .nickname(oAuthInfoResponse.getNickname())
+//                .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
+//                .build();
+
+        return null;
+    }
+
 }
+
