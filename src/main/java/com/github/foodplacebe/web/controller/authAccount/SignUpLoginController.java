@@ -1,18 +1,16 @@
 package com.github.foodplacebe.web.controller.authAccount;
 
 import com.github.foodplacebe.service.authAccount.SignUpLoginService;
-import com.github.foodplacebe.service.authAccount.SocialSignUpService;
+import com.github.foodplacebe.service.authAccount.oauth.SocialSignUpService;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
 import com.github.foodplacebe.web.dto.account.LoginRequest;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")

@@ -4,7 +4,7 @@
 //import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
 //import com.github.foodplacebe.repository.users.UserEntity;
 //import com.github.foodplacebe.repository.users.UserJpa;
-//import com.github.foodplacebe.service.authAccount.SocialSignUpService;
+//import com.github.foodplacebe.service.authAccount.oauth.SocialSignUpService;
 //import com.github.foodplacebe.service.exceptions.NotAcceptableException;
 //import com.github.foodplacebe.web.dto.account.SignUpRequest;
 //import lombok.RequiredArgsConstructor;

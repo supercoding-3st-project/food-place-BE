@@ -59,5 +59,10 @@ public class ExceptionControllerAdvice {
     public ErrorResponse handleBadCredentialsException(CustomBadCredentialsException ex) {
         return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),HttpStatus.UNAUTHORIZED.name(), ex.getDetailMessage(), ex.getRequest());
     }
+    @ExceptionHandler(NotFoundSocialAccount.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handleNotFoundSocialAccount(NotFoundSocialAccount ex) {
+        return new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(), HttpStatus.UNPROCESSABLE_ENTITY.name(), ex.getDetailMessage(), ex.getRequest());
+    }
 
 }
