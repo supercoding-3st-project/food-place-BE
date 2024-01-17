@@ -3,6 +3,8 @@ datasource:
   password: ${DATABASE_PASSWORD}
   driver-class-name: org.mariadb.jdbc.Driver
   url: jdbc:mariadb://database-1.cvyclyh4jg14.ap-northeast-2.rds.amazonaws.com:3306/food_place_project
+  jpa:
+    show-sql: true
 
 jwtpassword:
   source: ${JWT_CODE}

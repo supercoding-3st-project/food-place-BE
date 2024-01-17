@@ -59,7 +59,7 @@ tasks.named('test') {
 tasks.named('bootJar'){
     mainClass = 'com.github.foodplacebe.FoodPlaceBeApplication'
     destinationDirectory = file("./buildtest")
-    archivesBaseName = '프로젝트이름'
+    archivesBaseName = '또간지도'
     archiveFileName = 'testjar.jar'
     archiveVersion = "0.0.3"
 }
