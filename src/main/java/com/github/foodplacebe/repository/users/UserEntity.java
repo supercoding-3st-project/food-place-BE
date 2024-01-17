@@ -1,5 +1,7 @@
 package com.github.foodplacebe.repository.users;
 
+import com.github.foodplacebe.repository.postFavorite.PostFavorite;
+import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.repository.userRoles.UserRoles;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
@@ -20,6 +22,7 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Integer userId;
+
     @Column(name = "social_id", unique = true)
     private Long socialId;
 
@@ -34,6 +37,9 @@ public class UserEntity {
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
+
+    @Column(name = "id", unique = true, nullable = false)
+    private String id;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -68,4 +74,9 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity")
     private Collection<UserRoles> userRoles;
 
+    @OneToMany(mappedBy = "userEntity")
+    private Collection<Posts> posts;
+
+    @OneToMany(mappedBy = "userEntity")
+    private Collection<PostFavorite> postFavorites;
 }
