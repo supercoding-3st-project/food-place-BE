@@ -1,6 +1,5 @@
 package com.github.foodplacebe.repository.posts;
 
-import com.github.foodplacebe.repository.postFavorite.PostFavorite;
 import com.github.foodplacebe.repository.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
@@ -67,6 +66,6 @@ public class Posts {
     @Column(name = "delete_date")
     private LocalDateTime deleteDate;
 
-    @OneToMany(mappedBy = "posts")
-    private Collection<PostFavorite> postFavorites;
+//    @OneToMany(mappedBy = "posts")
+//    private Collection<PostFavorite> postFavorites;
 }
