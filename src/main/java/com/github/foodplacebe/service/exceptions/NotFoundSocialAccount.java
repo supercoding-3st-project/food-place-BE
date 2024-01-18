@@ -1,15 +1,15 @@
 package com.github.foodplacebe.service.exceptions;
 
-import com.github.foodplacebe.web.dto.account.AccountDto;
+import com.github.foodplacebe.web.dto.account.SocialAccountDto;
 import lombok.Getter;
 
 @Getter
 public class NotFoundSocialAccount extends RuntimeException{
-    private AccountDto request;
+    private SocialAccountDto request;
     private String detailMessage;
 
 
-    public NotFoundSocialAccount(AccountDto request, String detailMessage) {
+    public NotFoundSocialAccount(SocialAccountDto request, String detailMessage) {
         this.request = request;
         this.detailMessage = detailMessage;
     }

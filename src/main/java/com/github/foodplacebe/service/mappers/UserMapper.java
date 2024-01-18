@@ -3,10 +3,7 @@ package com.github.foodplacebe.service.mappers;
 import com.github.foodplacebe.repository.userRoles.Roles;
 import com.github.foodplacebe.repository.userRoles.UserRoles;
 import com.github.foodplacebe.repository.users.UserEntity;
-import com.github.foodplacebe.web.dto.account.AccountDto;
-import com.github.foodplacebe.web.dto.account.AccountPatchDto;
-import com.github.foodplacebe.web.dto.account.SignUpRequest;
-import com.github.foodplacebe.web.dto.account.SignUpResponse;
+import com.github.foodplacebe.web.dto.account.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -26,6 +23,7 @@ public interface UserMapper {
     @Mapping(target = "dateOfBirth", expression = "java(birthFormatting(signUpRequest.getDateOfBirth()))")
     @Mapping(target = "failureCount", expression = "java(0)")
     @Mapping(target = "status", expression = "java(\"normal\")")
+    @Mapping(target = "imageUrl", expression = "java(defaultProfileImgSetting())")
     UserEntity signUpRequestToUserEntity(SignUpRequest signUpRequest);
     @Mapping(target = "joinDate", expression = "java(formatting(userEntity.getJoinDate()))")
     SignUpResponse userEntityToSignUpResponse(UserEntity userEntity);
@@ -35,6 +33,8 @@ public interface UserMapper {
     @Mapping(target = "userRoles", ignore = true)
     @Mapping(target = "joinDate", ignore = true)
     UserEntity AccountDTOToUserEntity(AccountDto accountDTO);
+
+    UserEntity socialAccountDtoToUserEntity(SocialAccountDto socialAccountDto);
 
     @Mapping(target = "userRoles", ignore = true)
     @Mapping(target = "joinDate", ignore = true)
@@ -50,8 +50,8 @@ public interface UserMapper {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(birth,formatter);
     }
-    default String setDefault(String imageUrl){
-        return imageUrl==null ? "http://k.kakaocdn.net/dn/1G9kp/btsAot8liOn/8CWudi3uy07rvFNUkk3ER0/img_640x640.jpg" : imageUrl;
+    default String defaultProfileImgSetting(){
+        return "http://k.kakaocdn.net/dn/1G9kp/btsAot8liOn/8CWudi3uy07rvFNUkk3ER0/img_640x640.jpg";
     }
 
     default List<String> rolesMapper(UserEntity userEntity){

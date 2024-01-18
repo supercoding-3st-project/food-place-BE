@@ -1,7 +1,6 @@
 package com.github.foodplacebe.web.controller.authAccount;
 
 import com.github.foodplacebe.service.authAccount.SignUpLoginService;
-import com.github.foodplacebe.service.authAccount.oauth.SocialSignUpService;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
 import com.github.foodplacebe.web.dto.account.LoginRequest;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
@@ -17,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SignUpLoginController {
     private final SignUpLoginService signUpLoginService;
-    private final SocialSignUpService socialSignUpService;
     @GetMapping("/test9")
     public String test(){
         throw new NotFoundException("1","2");

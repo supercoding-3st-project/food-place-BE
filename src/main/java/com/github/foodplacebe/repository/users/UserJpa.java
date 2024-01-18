@@ -18,6 +18,7 @@ public interface UserJpa extends JpaRepository<UserEntity, Integer> {
 
 
     UserEntity findByEmail(String email);
+    UserEntity findBySocialId(Long socialId);
 
     @Query(
             "SELECT ue " +

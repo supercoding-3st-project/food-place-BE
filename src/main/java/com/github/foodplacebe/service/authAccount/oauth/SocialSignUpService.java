@@ -2,7 +2,7 @@ package com.github.foodplacebe.service.authAccount.oauth;
 
 import com.github.foodplacebe.config.security.JwtTokenConfig;
 import com.github.foodplacebe.service.authAccount.RequestOAuthInfoService;
-import com.github.foodplacebe.web.dto.account.AccountDto;
+import com.github.foodplacebe.web.dto.account.SocialAccountDto;
 import com.github.foodplacebe.web.dto.account.oauth.server.OAuthInfoResponse;
 import com.github.foodplacebe.web.dto.account.oauth.client.OAuthLoginParams;
 import com.github.foodplacebe.repository.userRoles.Roles;
@@ -15,7 +15,10 @@ import com.github.foodplacebe.service.exceptions.*;
 import com.github.foodplacebe.service.mappers.UserMapper;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
 import com.github.foodplacebe.web.dto.account.SignUpResponse;
+import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,15 +53,28 @@ public class SocialSignUpService {
                         .orElseThrow(()->{
                             UserEntity userEntityEmail =  userJpa.findByEmailJoin(email)
                                     .orElseThrow(()->{
-                                        AccountDto accountDto = new AccountDto();
-                                        accountDto.setEmail(email);
-                                        accountDto.setName(nickname);
-                                        accountDto.setImageUrl(profileImg);
-                                        return new NotFoundSocialAccount(accountDto, "회원가입이 필요합니다.");
+                                        SocialAccountDto socialAccountDto = new SocialAccountDto();
+                                        socialAccountDto.setProvider(socialProvider);
+                                        socialAccountDto.setSocialId(socialId);
+                                        socialAccountDto.setEmail("("+socialProvider+") "+email);
+                                        socialAccountDto.setName(nickname);
+                                        socialAccountDto.setImageUrl(profileImg);
+
+                                        socialSettingService.makeSocialTemp(socialAccountDto);
+                                        return new NotFoundSocialAccount(socialAccountDto, "회원가입이 필요합니다.");
                                     });
                             socialSettingService.socialIdSet(userEntityEmail, socialId);
                             return new ConflictException("소셜 이메일과 동일한 이메일로 가입된 계정이 있습니다. 계정 연결이 필요합니다.", email);
                         });
+                if(userEntity.getStatus().equals("signing")){
+                    SocialAccountDto socialAccountDto = new SocialAccountDto();
+                    socialAccountDto.setProvider(socialProvider);
+                    socialAccountDto.setSocialId(userEntity.getSocialId());
+                    socialAccountDto.setEmail(userEntity.getEmail());
+                    socialAccountDto.setName(userEntity.getName());
+                    socialAccountDto.setImageUrl(userEntity.getImageUrl());
+                    throw new NotFoundSocialAccount(socialAccountDto,"회원가입이 완료되지 않았습니다.");
+                }
                 break;
             case "NAVER":
                 break;
@@ -73,21 +89,32 @@ public class SocialSignUpService {
         return Arrays.asList(jwtTokenConfig.createToken(userEntity.getEmail(), roles), userEntity.getName());
     }
 
-    private Integer findOrCreateMember(OAuthInfoResponse oAuthInfoResponse) {
-        return userJpa.findByEmailJoin(oAuthInfoResponse.getEmail())
-                .map(ue->ue.getUserId())
-                .orElseGet(() -> 1);
+    public ResponseDto connectAccount(boolean isConnect, Long socialId) {
+        ResponseDto responseDto = new ResponseDto();
+        if(isConnect) {
+            responseDto.setResponseMessage("소셜 연결이 완료 되었습니다.");
+            return responseDto;
+        }else {
+            socialSettingService.cancelConnect(socialId);
+            responseDto.setResponseMessage("소셜 연결이 취소 되었습니다.");
+            return responseDto;
+        }
     }
 
-    private Long newMember(OAuthInfoResponse oAuthInfoResponse) {
-//        UserEntity userEntity = Member.builder()
-//                .email(oAuthInfoResponse.getEmail())
-//                .nickname(oAuthInfoResponse.getNickname())
-//                .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
-//                .build();
 
-        return null;
+    public ResponseDto socialSignUpFix(boolean isSignUp, Long socialId, SignUpRequest signUpRequest) {
+        UserEntity userEntity = userJpa.findBySocialIdJoin(socialId)
+                .orElseThrow(()-> new NotFoundException("가입중인 계정이 없습니다.", socialId.toString()));
+        ResponseDto responseDto = new ResponseDto();
+        if(!isSignUp){
+            socialSettingService.deleteSigningUpAccount(userEntity);
+            responseDto.setResponseMessage("소셜 가입을 취소 하였습니다.");
+            return responseDto;
+        }else{
+            socialSettingService.loadSigningUpAccount(userEntity, signUpRequest);
+            responseDto.setResponseMessage(userEntity.getNickName()+"님 환영합니다.");
+            return responseDto;
+        }
     }
-
 }
 

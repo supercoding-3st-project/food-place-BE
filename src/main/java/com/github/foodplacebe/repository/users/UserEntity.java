@@ -23,13 +23,13 @@ public class UserEntity {
     @Column(name = "social_id", unique = true)
     private Long socialId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "nick_name", unique = true, nullable = false)
     private String nickName;
 
-    @Column(name = "phone_number", unique = true, nullable = false)
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
     @Column(name = "email", unique = true, nullable = false)
@@ -38,11 +38,12 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "neighborhood", nullable = false)
+    @Column(name = "neighborhood")
     private String neighborhood;
 
     @Column(name = "gender", nullable = false)
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(name = "image_url", nullable = false, columnDefinition = "varchar(255) default 'http://k.kakaocdn.net/dn/1G9kp/btsAot8liOn/8CWudi3uy07rvFNUkk3ER0/img_640x640.jpg'")
     private String imageUrl;
@@ -67,5 +68,10 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "userEntity")
     private Collection<UserRoles> userRoles;
+
+    public enum Gender {
+        남성, 여성, 불명
+    }
+
 
 }
