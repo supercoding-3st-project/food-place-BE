@@ -27,7 +27,7 @@ import java.util.Map;
         basePackages = {
                 "com.github.foodplacebe.repository.commentFavorite",
                 "com.github.foodplacebe.repository.comments",
-//                "com.github.foodplacebe.repository.postFavorite",
+                "com.github.foodplacebe.repository.postFavorite",
                 "com.github.foodplacebe.repository.postPhotos",
                 "com.github.foodplacebe.repository.posts",
                 "com.github.foodplacebe.repository.users",
@@ -54,7 +54,7 @@ public class JpaConfig {
         lemfb.setPackagesToScan(
                 "com.github.foodplacebe.repository.commentFavorite",
                 "com.github.foodplacebe.repository.comments",
-//                "com.github.foodplacebe.repository.postFavorite",
+                "com.github.foodplacebe.repository.postFavorite",
                 "com.github.foodplacebe.repository.postPhotos",
                 "com.github.foodplacebe.repository.posts",
                 "com.github.foodplacebe.repository.users",
