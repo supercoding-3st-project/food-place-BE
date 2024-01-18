@@ -7,7 +7,7 @@ datasource:
     show-sql: true
 
 jwtpassword:
-  source: ${JWT_CODE}
+  source: ${JWT_SECRET_KEY}
 
 
 oauth:
