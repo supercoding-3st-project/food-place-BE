@@ -44,22 +44,22 @@ public class SignUpLoginService {
     @Transactional(transactionManager = "tm")
     public String signUp(SignUpRequest signUpRequest) {
         String email = signUpRequest.getEmail();
-        String phoneNumber = signUpRequest.getPhoneNumber();
+//        String phoneNumber = signUpRequest.getPhoneNumber();
         String password = signUpRequest.getPassword();
 
 
         if(!email.matches(".+@.+\\..+")){
             throw new BadRequestException("이메일을 정확히 입력해주세요.",email);
-        } else if (!phoneNumber.matches("01\\d{9}")) {
-            throw new BadRequestException("핸드폰 번호를 확인해주세요.", phoneNumber);
+//        } else if (!phoneNumber.matches("01\\d{9}")) {
+//            throw new BadRequestException("핸드폰 번호를 확인해주세요.", phoneNumber);
         } else if (signUpRequest.getNickName().matches("01\\d{9}")){
             throw new BadRequestException("핸드폰 번호를 닉네임으로 사용할수 없습니다.",signUpRequest.getNickName());
         }
 
         if(userJpa.existsByEmail(signUpRequest.getEmail())){
             throw new ConflictException("이미 입력하신 "+signUpRequest.getEmail()+" 이메일로 가입된 계정이 있습니다.",signUpRequest.getEmail());
-        }else if(userJpa.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
-            throw new ConflictException("이미 입력하신 "+signUpRequest.getPhoneNumber()+" 핸드폰 번호로 가입된 계정이 있습니다.",signUpRequest.getPhoneNumber());
+//        }else if(userJpa.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
+//            throw new ConflictException("이미 입력하신 "+signUpRequest.getPhoneNumber()+" 핸드폰 번호로 가입된 계정이 있습니다.",signUpRequest.getPhoneNumber());
         }else if(userJpa.existsByNickName(signUpRequest.getNickName())){
             throw new ConflictException("이미 입력하신 "+signUpRequest.getNickName()+" 닉네임으로 가입된 계정이 있습니다.",signUpRequest.getNickName());
         }
@@ -78,7 +78,7 @@ public class SignUpLoginService {
         Roles roles = rolesJpa.findByName("ROLE_USER");
 
 
-
+        if(!(signUpRequest.getGender().equals("남성")||signUpRequest.getGender().equals("여성"))) throw new BadRequestException("성별은 남성 혹은 여성 이어야 합니다.", signUpRequest.getGender());
 
         UserEntity userEntity = UserMapper.INSTANCE.signUpRequestToUserEntity(signUpRequest);
         userJpa.save(userEntity);
@@ -97,25 +97,36 @@ public class SignUpLoginService {
 
     //로그인 로직
     public List<String> login(LoginRequest loginRequest){
-        String emailOrPhoneNumber = loginRequest.getEmailOrPhoneNumberOrNickName();
+        String requestEmail = loginRequest.getEmail();
         UserEntity userEntity;
 
-        if(emailOrPhoneNumber.matches("01\\d+")&&emailOrPhoneNumber.length()==11){
-            userEntity = userJpa.findByPhoneNumberJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("입력하신 핸드폰 번호의 계정을 찾을 수 없습니다.", emailOrPhoneNumber)
-                    );
-        } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
-            userEntity = userJpa.findByEmailJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("입력하신 이메일의 계정을 찾을 수 없습니다.", emailOrPhoneNumber)
+//        if(emailOrPhoneNumber.matches("01\\d+")&&emailOrPhoneNumber.length()==11){
+//            userEntity = userJpa.findByPhoneNumberJoin(emailOrPhoneNumber).orElseThrow(()->
+//                    new NotFoundException("입력하신 핸드폰 번호의 계정을 찾을 수 없습니다.", emailOrPhoneNumber)
+//                    );
+//        } else if (emailOrPhoneNumber.matches(".+@.+\\..+")) {
+//            userEntity = userJpa.findByEmailJoin(emailOrPhoneNumber).orElseThrow(()->
+//                    new NotFoundException("입력하신 이메일의 계정을 찾을 수 없습니다.", emailOrPhoneNumber)
+//            );
+//        } else userEntity = userJpa.findByNickNameJoin(emailOrPhoneNumber).orElseThrow(()->
+//                    new NotFoundException("입력하신 닉네임의 계정을 찾을 수 없습니다.", emailOrPhoneNumber)
+//        );
+        if (requestEmail.matches(".+@.+\\..+")) {
+            userEntity = userJpa.findByEmailJoin(requestEmail).orElseThrow(()->
+                    new NotFoundException("입력하신 이메일의 계정을 찾을 수 없습니다.", requestEmail)
             );
-        } else userEntity = userJpa.findByNickNameJoin(emailOrPhoneNumber).orElseThrow(()->
-                    new NotFoundException("입력하신 닉네임의 계정을 찾을 수 없습니다.", emailOrPhoneNumber)
-        );
+        } else throw new BadRequestException("이메일이 잘못 입력되었습니다.", requestEmail);
 
         try{
             if(userEntity.getStatus().equals("delete")){
-                throw new AccessDenied("탈퇴한 계정입니다.",emailOrPhoneNumber);
+                throw new AccessDenied("탈퇴한 계정입니다.",requestEmail);
             }
+
+//            String t1 = userEntity.getPassword();
+//            String t2 = passwordEncoder.encode(loginRequest.getPassword());
+//            if(passwordEncoder.matches(loginRequest.getPassword(), t1)){
+//                System.out.println("a");
+//            }
 
             if(userEntity.getStatus().equals("lock")){
                 LocalDateTime lockDateTime = userEntity.getLockDate();
@@ -129,14 +140,14 @@ public class SignUpLoginService {
                     ), loginRequest.getPassword());
                 }
             }
-            String email = userEntity.getEmail();
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, loginRequest.getPassword()));
+//            String email = userEntity.getEmail();
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestEmail, loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             List<String> roles = userEntity.getUserRoles().stream()
                     .map(u->u.getRoles()).map(r->r.getName()).toList();
 
-            return Arrays.asList(jwtTokenConfig.createToken(email, roles), userEntity.getName());
+            return Arrays.asList(jwtTokenConfig.createToken(requestEmail, roles), userEntity.getName());
 //        }catch (InternalAuthenticationServiceException e){
 //            throw new NotFoundException(String.format("해당 이메일 또는 핸드폰번호 \"%s\"의 계정을 찾을 수 없습니다.", emailOrPhoneNumber));
         }
