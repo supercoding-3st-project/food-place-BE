@@ -77,6 +77,6 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity")
     private Collection<Posts> posts;
 
-//    @OneToMany(mappedBy = "userEntity")
-//    private Collection<PostFavorite> postFavorites;
+    @OneToMany(mappedBy = "userEntity")
+    private Collection<PostFavorite> postFavorites;
 }
