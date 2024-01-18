@@ -1,4 +1,4 @@
-package com.github.foodplacebe.repository.oauth;
+package com.github.foodplacebe.web.dto.account.oauth.client;
 
 import com.github.foodplacebe.repository.userDetails.OAuthProvider;
 import org.springframework.util.MultiValueMap;

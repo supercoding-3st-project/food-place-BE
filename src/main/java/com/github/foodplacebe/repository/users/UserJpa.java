@@ -18,6 +18,7 @@ public interface UserJpa extends JpaRepository<UserEntity, Integer> {
 
 
     UserEntity findByEmail(String email);
+    UserEntity findBySocialId(Long socialId);
 
     @Query(
             "SELECT ue " +
@@ -26,7 +27,7 @@ public interface UserJpa extends JpaRepository<UserEntity, Integer> {
                     "JOIN FETCH uer.roles " +
                     "WHERE ue.socialId = :socialId"
     )
-    UserEntity findBySocialIdJoin(Long socialId);
+    Optional<UserEntity> findBySocialIdJoin(Long socialId);
 
     @Query(
             "SELECT ue " +

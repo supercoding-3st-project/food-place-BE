@@ -1,4 +1,4 @@
-package com.github.foodplacebe.repository.oauth;
+package com.github.foodplacebe.config.security.oauth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
