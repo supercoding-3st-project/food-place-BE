@@ -25,9 +25,6 @@ public class UserEntity {
     @Column(name = "social_id", unique = true)
     private Long socialId;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "nick_name", unique = true, nullable = false)
     private String nickName;
 

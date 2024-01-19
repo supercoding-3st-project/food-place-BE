@@ -138,7 +138,7 @@ public class SignUpLoginService {
                     String minute = String.valueOf(duration.toMinutes());
                     String seconds = String.valueOf(duration.minusMinutes(duration.toMinutes()).getSeconds());
                     throw new AccountLockedException(String.format(
-                            "'%s'님의 계정이 비밀번호 5회 실패로 잠겼습니다. 남은 시간 : %s분 %s초", userEntity.getName(),minute,seconds
+                            "'%s'님의 계정이 비밀번호 5회 실패로 잠겼습니다. 남은 시간 : %s분 %s초", userEntity.getNickName(),minute,seconds
                     ), loginRequest.getPassword());
                 }
             }
@@ -148,7 +148,10 @@ public class SignUpLoginService {
 
             List<String> roles = userEntity.getUserRoles().stream()
                     .map(u->u.getRoles()).map(r->r.getName()).toList();
-            ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.");
+          
+            SignUpResponse signUpResponse = UserMapper.INSTANCE.userEntityToSignUpResponse(userEntity);
+            ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.", signUpResponse);
+
 
             return Arrays.asList(jwtTokenConfig.createToken(requestEmail, roles), responseDto);
 //        }catch (InternalAuthenticationServiceException e){

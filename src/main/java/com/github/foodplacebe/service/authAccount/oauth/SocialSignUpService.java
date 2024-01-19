@@ -1,6 +1,8 @@
 package com.github.foodplacebe.service.authAccount.oauth;
 
 import com.github.foodplacebe.config.security.JwtTokenConfig;
+import com.github.foodplacebe.service.mappers.UserMapper;
+import com.github.foodplacebe.web.dto.account.SignUpResponse;
 import com.github.foodplacebe.web.dto.account.SocialAccountDto;
 import com.github.foodplacebe.web.dto.account.oauth.server.OAuthInfoResponse;
 import com.github.foodplacebe.web.dto.account.oauth.client.OAuthLoginParams;
@@ -32,15 +34,26 @@ public class SocialSignUpService {
 
 
 
-    public List<String> login(OAuthLoginParams params) {
+    public List<Object> login(OAuthLoginParams params) {
         OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
         String email =oAuthInfoResponse.getEmail();
         String profileImg = oAuthInfoResponse.getProfileImg();
         String socialProvider = oAuthInfoResponse.getOAuthProvider().name();
         String nickname = oAuthInfoResponse.getNickName();
         Long socialId = oAuthInfoResponse.getSocialId();
-        UserEntity userEntity = null;
 
+        UserEntity userEntity = userJpa.findBySocialId(socialId);
+        if(userEntity!=null){
+            if(userEntity.getStatus().equals("temp")){
+                SocialAccountDto socialAccountDto = new SocialAccountDto();
+                socialAccountDto.setProvider(socialProvider);
+                socialAccountDto.setSocialId(userEntity.getSocialId());
+                socialAccountDto.setEmail(email);
+                socialAccountDto.setImageUrl(userEntity.getImageUrl());
+                socialAccountDto.setNickName(userEntity.getNickName());
+                throw new NotFoundSocialAccount(socialAccountDto,"회원가입이 완료되지 않았습니다. 이어서 하시겠습니까?");
+            }
+        }
         switch (socialProvider){
             case "KAKAO":
                 userEntity = userJpa.findBySocialIdJoin(socialId)
@@ -50,25 +63,16 @@ public class SocialSignUpService {
                                         SocialAccountDto socialAccountDto = new SocialAccountDto();
                                         socialAccountDto.setProvider(socialProvider);
                                         socialAccountDto.setSocialId(socialId);
-                                        socialAccountDto.setEmail("("+socialProvider+") "+email);
-                                        socialAccountDto.setName(nickname);
+                                        socialAccountDto.setEmail(email);
+                                        socialAccountDto.setNickName("("+socialProvider+") "+nickname+"_"+socialId);
                                         socialAccountDto.setImageUrl(profileImg);
 
                                         socialSettingService.makeSocialTemp(socialAccountDto);
-                                        return new NotFoundSocialAccount(socialAccountDto, "회원가입이 필요합니다.");
+                                        return new NotFoundSocialAccount(socialAccountDto, "회원가입이 필요합니다. 회원가입 하시겠습니까?");
                                     });
                             socialSettingService.socialIdSet(userEntityEmail, socialId);
-                            return new ConflictException("소셜 이메일과 동일한 이메일로 가입된 계정이 있습니다. 계정 연결이 필요합니다.", email);
+                            return new ConflictException("소셜 이메일과 동일한 이메일로 가입된 계정이 있습니다. 소셜 계정과 연동 시키겠습니까?", email);
                         });
-                if(userEntity.getStatus().equals("signing")){
-                    SocialAccountDto socialAccountDto = new SocialAccountDto();
-                    socialAccountDto.setProvider(socialProvider);
-                    socialAccountDto.setSocialId(userEntity.getSocialId());
-                    socialAccountDto.setEmail(userEntity.getEmail());
-                    socialAccountDto.setName(userEntity.getName());
-                    socialAccountDto.setImageUrl(userEntity.getImageUrl());
-                    throw new NotFoundSocialAccount(socialAccountDto,"회원가입이 완료되지 않았습니다.");
-                }
                 break;
             case "NAVER":
                 break;
@@ -77,10 +81,13 @@ public class SocialSignUpService {
         }
         List<String> roles = userEntity.getUserRoles().stream()
                 .map(u->u.getRoles()).map(r->r.getName()).toList();
+        SignUpResponse signUpResponse = UserMapper.INSTANCE.userEntityToSignUpResponse(userEntity);
+        ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.", signUpResponse);
 
 
 
-        return Arrays.asList(jwtTokenConfig.createToken(userEntity.getEmail(), roles), userEntity.getName());
+
+        return Arrays.asList(jwtTokenConfig.createToken(userEntity.getEmail(), roles), responseDto);
     }
 
     public ResponseEntity<ResponseDto> connectAccount(boolean isConnect, Long socialId) {

@@ -30,19 +30,19 @@ public class SocialController {
     }
 
     @GetMapping("/success")
-    public String success(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        String cu = customUserDetails.getUsername();
-        return "success";
-    }
-    @PostMapping("/kakao")
-    public ResponseEntity<ResponseDto> loginKakao(@RequestBody KakaoLoginParams params, HttpServletResponse httpServletResponse) {
+    public CustomUserDetails success(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        List<String> resList = socialSignUpService.login(params);
-        httpServletResponse.setHeader("Token", resList.get(0));
-        return new ResponseEntity<>(
-                new ResponseDto(HttpStatus.OK.value(), resList.get(1)+"님 환영합니다."),
-                HttpStatus.OK
-        );
+        return customUserDetails;
+    }
+  
+    @PostMapping("/kakao")
+    public ResponseDto loginKakao(@RequestBody KakaoLoginParams params, HttpServletResponse httpServletResponse) {
+
+        List<Object> tokenAndResponse = socialSignUpService.login(params);
+        httpServletResponse.setHeader("Token", (String) tokenAndResponse.get(0));
+        return (ResponseDto) tokenAndResponse.get(1);
+
+
     }
     @PostMapping("/connect")
     public ResponseEntity<ResponseDto> connectAccount(
