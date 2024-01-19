@@ -1,26 +1,20 @@
 package com.github.foodplacebe.service.authAccount.oauth;
 
 import com.github.foodplacebe.config.security.JwtTokenConfig;
-import com.github.foodplacebe.service.authAccount.RequestOAuthInfoService;
 import com.github.foodplacebe.web.dto.account.SocialAccountDto;
 import com.github.foodplacebe.web.dto.account.oauth.server.OAuthInfoResponse;
 import com.github.foodplacebe.web.dto.account.oauth.client.OAuthLoginParams;
-import com.github.foodplacebe.repository.userRoles.Roles;
 import com.github.foodplacebe.repository.userRoles.RolesJpa;
-import com.github.foodplacebe.repository.userRoles.UserRoles;
 import com.github.foodplacebe.repository.userRoles.UserRolesJpa;
 import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
 import com.github.foodplacebe.service.exceptions.*;
-import com.github.foodplacebe.service.mappers.UserMapper;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
-import com.github.foodplacebe.web.dto.account.SignUpResponse;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -89,31 +83,42 @@ public class SocialSignUpService {
         return Arrays.asList(jwtTokenConfig.createToken(userEntity.getEmail(), roles), userEntity.getName());
     }
 
-    public ResponseDto connectAccount(boolean isConnect, Long socialId) {
-        ResponseDto responseDto = new ResponseDto();
+    public ResponseEntity<ResponseDto> connectAccount(boolean isConnect, Long socialId) {
+
         if(isConnect) {
-            responseDto.setResponseMessage("소셜 연결이 완료 되었습니다.");
-            return responseDto;
+            return new ResponseEntity<>(
+                    new ResponseDto(HttpStatus.CREATED.value(),
+                    "소셜 연결이 완료 되었습니다."),
+                    HttpStatus.CREATED
+            );
         }else {
             socialSettingService.cancelConnect(socialId);
-            responseDto.setResponseMessage("소셜 연결이 취소 되었습니다.");
-            return responseDto;
+            return new ResponseEntity<>(
+                    new ResponseDto(HttpStatus.ACCEPTED.value(),
+                            "소셜 연결이 취소 되었습니다."),
+                    HttpStatus.ACCEPTED
+            );
         }
     }
 
 
-    public ResponseDto socialSignUpFix(boolean isSignUp, Long socialId, SignUpRequest signUpRequest) {
+    public ResponseEntity<ResponseDto> socialSignUpFix(boolean isSignUp, Long socialId, SignUpRequest signUpRequest) {
         UserEntity userEntity = userJpa.findBySocialIdJoin(socialId)
                 .orElseThrow(()-> new NotFoundException("가입중인 계정이 없습니다.", socialId.toString()));
-        ResponseDto responseDto = new ResponseDto();
         if(!isSignUp){
             socialSettingService.deleteSigningUpAccount(userEntity);
-            responseDto.setResponseMessage("소셜 가입을 취소 하였습니다.");
-            return responseDto;
+            return new ResponseEntity<>(
+                    new ResponseDto(HttpStatus.ACCEPTED.value(),
+                            "소셜 가입을 취소 하였습니다."),
+                    HttpStatus.ACCEPTED
+            );
         }else{
             socialSettingService.loadSigningUpAccount(userEntity, signUpRequest);
-            responseDto.setResponseMessage(userEntity.getNickName()+"님 환영합니다.");
-            return responseDto;
+            return new ResponseEntity<>(
+                    new ResponseDto(HttpStatus.CREATED.value(),
+                            userEntity.getNickName()+"님 소셜 가입이 완료 되었습니다."),
+                    HttpStatus.CREATED
+            );
         }
     }
 }

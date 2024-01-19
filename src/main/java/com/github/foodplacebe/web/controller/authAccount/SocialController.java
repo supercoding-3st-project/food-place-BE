@@ -35,29 +35,27 @@ public class SocialController {
         return "success";
     }
     @PostMapping("/kakao")
-    public ResponseDto loginKakao(@RequestBody KakaoLoginParams params, HttpServletResponse httpServletResponse) {
-        ResponseDto responseDto = new ResponseDto();
+    public ResponseEntity<ResponseDto> loginKakao(@RequestBody KakaoLoginParams params, HttpServletResponse httpServletResponse) {
+
         List<String> resList = socialSignUpService.login(params);
         httpServletResponse.setHeader("Token", resList.get(0));
-        responseDto.setResponseMessage(resList.get(1)+"님 환영합니다.");
-        return responseDto;
+        return new ResponseEntity<>(
+                new ResponseDto(HttpStatus.OK.value(), resList.get(1)+"님 환영합니다."),
+                HttpStatus.OK
+        );
     }
     @PostMapping("/connect")
     public ResponseEntity<ResponseDto> connectAccount(
             @RequestParam(name = "is-connect") boolean isConnect,
             @RequestParam(name = "social-id") Long socialId){
-        ResponseDto responseDto = socialSignUpService.connectAccount(isConnect, socialId);
-        return new ResponseEntity<>(responseDto,
-                isConnect?HttpStatus.CREATED:HttpStatus.NO_CONTENT);
+        return socialSignUpService.connectAccount(isConnect, socialId);
     }
     @PostMapping("/sign-up")
     public ResponseEntity<ResponseDto> socialSignUp(
             @RequestParam(name = "is-sign-up") boolean isSignUp,
             @RequestParam(name = "social-id") Long socialId,
             @RequestBody SignUpRequest signUpRequest){
-        ResponseDto responseDto = socialSignUpService.socialSignUpFix(isSignUp, socialId, signUpRequest);
-        return new ResponseEntity<>(responseDto,
-                isSignUp?HttpStatus.CREATED:HttpStatus.NO_CONTENT);
+        return socialSignUpService.socialSignUpFix(isSignUp, socialId, signUpRequest);
     }
 //    @PostMapping("/naver")
 //    public String loginNaver(@RequestBody NaverLoginParams params) {
