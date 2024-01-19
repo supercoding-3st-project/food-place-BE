@@ -48,7 +48,7 @@ public class AccountLockService {
             String minute = String.valueOf(duration.toMinutes());
             String seconds = String.valueOf(duration.minusMinutes(duration.toMinutes()).getSeconds());
             requestInfo.replace("request",null, "locked");
-            requestInfo.put("name", userEntity.getName());
+            requestInfo.put("name", userEntity.getNickName());
             requestInfo.put("minute", minute);
             requestInfo.put("seconds", seconds);
             return requestInfo;

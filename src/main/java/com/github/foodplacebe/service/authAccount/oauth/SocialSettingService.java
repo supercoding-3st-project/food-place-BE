@@ -40,14 +40,14 @@ public class SocialSettingService {
     public void makeSocialTemp(SocialAccountDto socialAccountDto) {
         UserEntity userEntity = UserMapper.INSTANCE.socialAccountDtoToUserEntity(socialAccountDto);
         //email name imageUrl 무시
+        userEntity.setEmail("("+socialAccountDto.getProvider()+") "+userEntity.getEmail());
         userEntity.setSocialId(socialAccountDto.getSocialId());
         userEntity.setPhoneNumber(socialAccountDto.getSocialId().toString());
-        userEntity.setNickName(socialAccountDto.getProvider()+"_"+ socialAccountDto.getSocialId());
         userEntity.setPassword("Non-Alcoholic");
         userEntity.setGender(UserEntity.Gender.불명);
         userEntity.setJoinDate(LocalDateTime.now());
         userEntity.setDateOfBirth(LocalDate.now());
-        userEntity.setStatus("signing");
+        userEntity.setStatus("temp");
         userEntity.setDeletionDate(LocalDateTime.now().minusDays(6));
         userEntity.setFailureCount(0);
         userJpa.save(userEntity);

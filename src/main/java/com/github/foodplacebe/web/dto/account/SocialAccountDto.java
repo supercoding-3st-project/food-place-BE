@@ -11,7 +11,7 @@ import lombok.Setter;
 public class SocialAccountDto {
     private Long socialId;
     private String provider;
-    private String name;
+    private String nickName;
     private String email;
     private String imageUrl;
     private String gender;
