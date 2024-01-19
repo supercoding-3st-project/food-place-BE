@@ -31,7 +31,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .password(userEntity.getPassword())
                 .phoneNumber(userEntity.getPhoneNumber())
                 .nickName(userEntity.getNickName())
-                .name(userEntity.getName())
 
                 .authorities(userEntity.getUserRoles()
                         .stream().map(ur->ur.getRoles())
