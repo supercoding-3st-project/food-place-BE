@@ -34,12 +34,15 @@ public class SocialController {
 
         return customUserDetails;
     }
+  
     @PostMapping("/kakao")
     public ResponseDto loginKakao(@RequestBody KakaoLoginParams params, HttpServletResponse httpServletResponse) {
 
         List<Object> tokenAndResponse = socialSignUpService.login(params);
         httpServletResponse.setHeader("Token", (String) tokenAndResponse.get(0));
         return (ResponseDto) tokenAndResponse.get(1);
+
+
     }
     @PostMapping("/connect")
     public ResponseEntity<ResponseDto> connectAccount(
