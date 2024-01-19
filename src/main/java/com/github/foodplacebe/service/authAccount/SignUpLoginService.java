@@ -99,6 +99,9 @@ public class SignUpLoginService {
 
     //로그인 로직
     public List<Object> login(LoginRequest loginRequest){
+        if(loginRequest.getEmail()==null||loginRequest.getPassword()==null){
+            throw new BadRequestException("이메일이나 비밀번호 값이 비어있습니다.","email : "+loginRequest.getEmail()+", password : "+loginRequest.getPassword());
+        }
         String requestEmail = loginRequest.getEmail();
         UserEntity userEntity;
 
