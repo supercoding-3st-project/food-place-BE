@@ -4,6 +4,7 @@ import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
 import com.github.foodplacebe.service.authAccount.AccountService;
 import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.AccountPatchDto;
+import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping("/my-page")
-    public AccountDto getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseDto getMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         return accountService.getMyInfo(customUserDetails);
     }
 

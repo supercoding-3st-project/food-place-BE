@@ -1,11 +1,29 @@
 package com.github.foodplacebe.web.dto.responseDto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class ResponseDto {
-    //임시로 만들었습니다. 응답 확정나면 응답 DTO 양식에 맞게 다시 만들게요
-    private String responseMessage;
+    private int code;
+    private String message;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Object data;
+
+    // 생성자, 게터 및 세터는 필요에 따라 추가할 수 있습니다.
+
+    public ResponseDto(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public ResponseDto(int code, String message, Object data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
 }
+
+

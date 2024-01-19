@@ -12,7 +12,9 @@ import com.github.foodplacebe.service.mappers.UserMapper;
 import com.github.foodplacebe.web.dto.account.LoginRequest;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
 import com.github.foodplacebe.web.dto.account.SignUpResponse;
+import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +28,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +45,7 @@ public class SignUpLoginService {
 
     //회원가입 로직
     @Transactional(transactionManager = "tm")
-    public String signUp(SignUpRequest signUpRequest) {
+    public ResponseDto signUp(SignUpRequest signUpRequest) {
         String email = signUpRequest.getEmail();
 //        String phoneNumber = signUpRequest.getPhoneNumber();
         String password = signUpRequest.getPassword();
@@ -90,13 +93,12 @@ public class SignUpLoginService {
 
         SignUpResponse signUpResponse = UserMapper.INSTANCE.userEntityToSignUpResponse(userEntity);
 
-        return signUpResponse.getName()+"님 회원 가입이 완료 되었습니다.\n"+
-                "가입 날짜 : "+signUpResponse.getJoinDate();
+        return new ResponseDto(HttpStatus.OK.value(), userEntity.getNickName()+"님 회원 가입이 완료 되었습니다.", signUpResponse);
     }
 
 
     //로그인 로직
-    public List<String> login(LoginRequest loginRequest){
+    public List<Object> login(LoginRequest loginRequest){
         String requestEmail = loginRequest.getEmail();
         UserEntity userEntity;
 
@@ -146,8 +148,9 @@ public class SignUpLoginService {
 
             List<String> roles = userEntity.getUserRoles().stream()
                     .map(u->u.getRoles()).map(r->r.getName()).toList();
+            ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.");
 
-            return Arrays.asList(jwtTokenConfig.createToken(requestEmail, roles), userEntity.getName());
+            return Arrays.asList(jwtTokenConfig.createToken(requestEmail, roles), responseDto);
 //        }catch (InternalAuthenticationServiceException e){
 //            throw new NotFoundException(String.format("해당 이메일 또는 핸드폰번호 \"%s\"의 계정을 찾을 수 없습니다.", emailOrPhoneNumber));
         }

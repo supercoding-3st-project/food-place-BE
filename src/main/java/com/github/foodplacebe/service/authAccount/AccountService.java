@@ -11,10 +11,12 @@ import com.github.foodplacebe.service.exceptions.NotFoundException;
 import com.github.foodplacebe.service.mappers.UserMapper;
 import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.AccountPatchDto;
+import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,12 +38,13 @@ public class AccountService {
 
 
 
-    public AccountDto getMyInfo(CustomUserDetails customUserDetails) {
+    public ResponseDto getMyInfo(CustomUserDetails customUserDetails) {
         UserEntity userEntity = userJpa.findByEmailJoin(customUserDetails.getUsername())
                 .orElseThrow(()->new NotFoundException("계정 정보를 찾을 수 없습니다.",customUserDetails.getUsername()));
-        List<String> roles = userEntity.getUserRoles().stream()
-                .map(ur->ur.getRoles()).map(r->r.getName()).toList();
-        return UserMapper.INSTANCE.userEntityToAccountDTO(userEntity);
+//        List<String> roles = userEntity.getUserRoles().stream()
+//                .map(ur->ur.getRoles()).map(r->r.getName()).toList();
+        AccountDto accountDto = UserMapper.INSTANCE.userEntityToAccountDTO(userEntity);
+        return new ResponseDto(HttpStatus.OK.value(), "수정될 회원의 정보를 가져오는데 성공 했습니다.", accountDto);
     }
 
     @Transactional(transactionManager = "tm")
