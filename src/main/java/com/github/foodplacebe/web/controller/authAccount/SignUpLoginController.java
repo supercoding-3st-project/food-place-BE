@@ -4,9 +4,12 @@ import com.github.foodplacebe.service.authAccount.SignUpLoginService;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
 import com.github.foodplacebe.web.dto.account.LoginRequest;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
+import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,12 +19,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SignUpLoginController {
     private final SignUpLoginService signUpLoginService;
+
+    @GetMapping("/test8")
+    public ResponseEntity<ResponseDto> test0(){
+        return new ResponseEntity<>(
+                new ResponseDto(HttpStatus.ACCEPTED.value(),
+                        "소셜 가입을 취소 하였습니다."),
+                HttpStatus.ACCEPTED
+        );
+    }
     @GetMapping("/test9")
-    public String test(){
-        throw new NotFoundException("1","2");
+    public ResponseEntity<ResponseDto> test(){
+        return new ResponseEntity<>(
+                new ResponseDto(HttpStatus.ACCEPTED.value(),
+                        "소셜 가입을 취소 하였습니다."),
+                HttpStatus.ACCEPTED
+        );
+    }
+    @GetMapping("/test10")
+    public ResponseEntity<ResponseDto> test1(){
+        return new ResponseEntity<>(
+                new ResponseDto(HttpStatus.CREATED.value(),
+                        "소셜 가입을 취소 하였습니다."),
+                HttpStatus.CREATED
+        );
     }
     @PostMapping("/sign-up")
-    public String signUp(@RequestBody SignUpRequest signUpRequest){
+    public ResponseDto signUp(@RequestBody SignUpRequest signUpRequest){
         return signUpLoginService.signUp(signUpRequest);
     }
     @GetMapping("/sign-up")
@@ -37,15 +61,10 @@ public class SignUpLoginController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse){
-        List<String> tokenAndUserName = signUpLoginService.login(loginRequest);
-        httpServletResponse.setHeader("Token", tokenAndUserName.get(0));
-        return "\""+tokenAndUserName.get(1)+"\"님 환영합니다.";
-    }
-    @GetMapping("/oauth2/token")
-    public String tokenTest3(){
-
-        return "메롱";
+    public ResponseDto login(@RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse){
+        List<Object> tokenAndResponse = signUpLoginService.login(loginRequest);
+        httpServletResponse.setHeader("Token", (String) tokenAndResponse.get(0));
+        return (ResponseDto) tokenAndResponse.get(1);
     }
 
     @GetMapping("/login")

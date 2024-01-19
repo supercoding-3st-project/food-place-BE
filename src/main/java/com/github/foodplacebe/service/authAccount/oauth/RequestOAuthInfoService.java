@@ -1,4 +1,4 @@
-package com.github.foodplacebe.service.authAccount;
+package com.github.foodplacebe.service.authAccount.oauth;
 
 import com.github.foodplacebe.config.security.oauth.client.OAuthApiClient;
 import com.github.foodplacebe.web.dto.account.oauth.server.OAuthInfoResponse;
