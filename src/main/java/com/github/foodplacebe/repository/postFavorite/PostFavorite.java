@@ -3,15 +3,16 @@ package com.github.foodplacebe.repository.postFavorite;
 import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.repository.users.UserEntity;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "post_favorite")
 @Getter
 @Setter
 @EqualsAndHashCode(of = "postFavoriteId")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostFavorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
