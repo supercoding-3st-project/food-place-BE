@@ -13,16 +13,19 @@ import org.springframework.web.bind.annotation.*;
 public class PostDetailController {
     private final PostDetailService postDetailService;
 
-    @GetMapping("/get-post-detail/{postId}")
+    @GetMapping("/get-post-detail/{postId}") // 상품 상세 조회
     public ResponseDto getPostDetails(@PathVariable Integer postId) {
         return postDetailService.getPostDetails(postId);
     }
 
-    @PostMapping("/post-favorite/{postId}")
-    public ResponseDto pushFavorite(
-            @PathVariable Integer postId,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
-    ) {
+    @GetMapping("/post-favorite-status/{postId}") // 로그인한 유저가 좋아요를 눌렀는지 확인
+    public ResponseDto getFavoriteStatus (@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable Integer postId) {
+        return postDetailService.getFavoriteStatus(customUserDetails, postId);
+    }
+    @PostMapping("/post-favorite-push/{postId}") // 좋아요 누르기(등록/해제)
+    public ResponseDto pushFavorite(@PathVariable Integer postId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return postDetailService.pushFavorite(postId,customUserDetails);
     }
+
+
 }
