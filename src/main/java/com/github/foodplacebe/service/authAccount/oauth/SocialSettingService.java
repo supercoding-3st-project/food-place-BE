@@ -8,7 +8,6 @@ import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
 import com.github.foodplacebe.service.exceptions.NotAcceptableException;
 import com.github.foodplacebe.service.mappers.UserMapper;
-import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
 import com.github.foodplacebe.web.dto.account.SocialAccountDto;
 import lombok.RequiredArgsConstructor;

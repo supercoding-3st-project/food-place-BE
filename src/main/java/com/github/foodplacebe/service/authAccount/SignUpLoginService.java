@@ -15,6 +15,7 @@ import com.github.foodplacebe.web.dto.account.SignUpResponse;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -163,10 +164,27 @@ public class SignUpLoginService {
         }
     }
 
-    public boolean checkEmail(String email) {
-        if (!email.matches(".+@.+\\..+")) {
+    public ResponseDto checkEmail(String email) {
+        if (email==null||!email.matches(".+@.+\\..+")) {
             throw new BadRequestException("이메일을 정확히 입력해주세요.",email);
         }
-        return !userJpa.existsByEmail(email);
+        boolean validEmail = !userJpa.existsByEmail(email);
+
+        return new ResponseDto(validEmail?HttpStatus.OK.value():HttpStatus.CONFLICT.value(),
+                validEmail ? "사용 가능한 이메일 입니다."
+                        : "이미 사용중인 이메일 입니다.",
+                validEmail);
+    }
+
+    public ResponseDto checkNickname(String nickname) {
+        if (nickname==null) {
+            throw new BadRequestException("닉네임을 입력해주세요.", null);
+        }
+        boolean validNickName = !userJpa.existsByNickName(nickname);
+
+        return new ResponseDto(validNickName?HttpStatus.OK.value():HttpStatus.CONFLICT.value(),
+                validNickName ? "사용 가능한 닉네임 입니다."
+                        : "이미 사용중인 닉네임 입니다.",
+                validNickName);
     }
 }

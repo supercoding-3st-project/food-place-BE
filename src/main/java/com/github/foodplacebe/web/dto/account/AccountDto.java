@@ -7,9 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+//@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AccountDto {
-    private String name;
     private String email;
     private String nickName;
     private String phoneNumber;
