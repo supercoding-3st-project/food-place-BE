@@ -1,5 +1,6 @@
 package com.github.foodplacebe.repository.posts;
 
+import com.github.foodplacebe.repository.comments.Comments;
 import com.github.foodplacebe.repository.postFavorite.PostFavorite;
 import com.github.foodplacebe.repository.postPhotos.PostPhotos;
 import com.github.foodplacebe.repository.users.UserEntity;
@@ -56,13 +57,13 @@ public class Posts {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "view_count", nullable = false, columnDefinition = "DEFAULT 0")
+    @Column(name = "view_count", columnDefinition = "DEFAULT 200")
     private Integer viewCount;
 
     @Column(name = "main_photo")
     private String mainPhoto;
 
-    @Column(name = "create_at", nullable = false, columnDefinition = "DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "create_at",columnDefinition = "DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createAt;
 
     @Column(name = "update_at")
@@ -76,4 +77,7 @@ public class Posts {
 
     @OneToMany(mappedBy = "posts")
     private List<PostPhotos> postPhotos;
+
+    @OneToMany(mappedBy = "posts")
+    private List<Comments> comments;
 }

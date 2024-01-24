@@ -8,7 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/api")
+@RequestMapping("/v1/hansol")
 @RequiredArgsConstructor
 public class PostDetailController {
     private final PostDetailService postDetailService;
@@ -25,6 +25,11 @@ public class PostDetailController {
     @PostMapping("/post-favorite-push/{postId}") // 좋아요 누르기(등록/해제)
     public ResponseDto pushFavorite(@PathVariable Integer postId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return postDetailService.pushFavorite(postId,customUserDetails);
+    }
+
+    @DeleteMapping("/post-delete/{postId}") // 맛집 게시글 삭제
+    public ResponseDto deletePost (@PathVariable Integer postId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return postDetailService.deletePost(postId, customUserDetails);
     }
 
 
