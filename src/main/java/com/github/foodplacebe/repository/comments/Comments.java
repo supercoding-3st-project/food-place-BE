@@ -1,21 +1,24 @@
 package com.github.foodplacebe.repository.comments;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.foodplacebe.repository.commentFavorite.CommentFavorite;
 import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.repository.users.UserEntity;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "comments")
 @Getter
 @Setter
 @EqualsAndHashCode(of = "commentId")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Comments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,5 +52,5 @@ public class Comments {
     private LocalDateTime updateAt;
 
     @OneToMany(mappedBy = "comments")
-    private Collection<CommentFavorite> commentFavorites;
+    private List<CommentFavorite> commentFavorites;
 }
