@@ -15,5 +15,6 @@ public class AccountDto {
     private String imageUrl;
     private String neighborhood;
     private String gender;
+    private String dateOfBirth;
     private String joinDate;
 }

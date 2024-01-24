@@ -9,6 +9,7 @@ import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
 import com.github.foodplacebe.service.exceptions.*;
 import com.github.foodplacebe.service.mappers.UserMapper;
+import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.LoginRequest;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
 import com.github.foodplacebe.web.dto.account.SignUpResponse;
@@ -26,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -186,5 +189,20 @@ public class SignUpLoginService {
                 validNickName ? "사용 가능한 닉네임 입니다."
                         : "이미 사용중인 닉네임 입니다.",
                 validNickName);
+    }
+
+    public ResponseDto findEmailByBirth(AccountDto nickNameAndBirth) {
+        String nickName = nickNameAndBirth.getNickName();
+        String birth = nickNameAndBirth.getDateOfBirth();
+        if(nickName==null||birth==null){
+            throw new BadRequestException("닉네임 또는 생년월일이 입력되지 않았습니다.", "닉네임 : "+nickName+", 생년월일 : "+birth);
+        }
+        UserEntity userEntity = userJpa.findByNickName(nickName)
+                .orElseThrow(()->new NotFoundException("가입 정보가 없습니다.", nickName));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if(LocalDate.parse(birth,formatter).equals(userEntity.getDateOfBirth())){
+            return new ResponseDto(HttpStatus.OK.value(), "생년월일 인증에 성공 하였습니다.", userEntity.getEmail());
+        }else throw new AccessDenied("인증에 실패 하였습니다.",birth);
     }
 }
