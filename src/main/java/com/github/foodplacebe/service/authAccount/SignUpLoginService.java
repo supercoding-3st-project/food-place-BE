@@ -155,8 +155,10 @@ public class SignUpLoginService {
 
             List<String> roles = userEntity.getUserRoles().stream()
                     .map(u->u.getRoles()).map(r->r.getName()).toList();
+          
             SignUpResponse signUpResponse = UserMapper.INSTANCE.userEntityToSignUpResponse(userEntity);
             ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.", signUpResponse);
+
 
             return Arrays.asList(jwtTokenConfig.createToken(requestEmail, roles), responseDto);
 //        }catch (InternalAuthenticationServiceException e){

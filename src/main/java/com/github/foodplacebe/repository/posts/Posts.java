@@ -1,19 +1,24 @@
 package com.github.foodplacebe.repository.posts;
 
+import com.github.foodplacebe.repository.postFavorite.PostFavorite;
+import com.github.foodplacebe.repository.postPhotos.PostPhotos;
 import com.github.foodplacebe.repository.users.UserEntity;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
 @Getter
 @Setter
 @EqualsAndHashCode(of = "postId")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Posts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,15 +62,18 @@ public class Posts {
     @Column(name = "main_photo")
     private String mainPhoto;
 
-    @Column(name = "create_date", nullable = false, columnDefinition = "DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createDate;
+    @Column(name = "create_at", nullable = false, columnDefinition = "DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createAt;
 
-    @Column(name = "update_date")
-    private LocalDateTime updateDate;
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
 
-    @Column(name = "delete_date")
-    private LocalDateTime deleteDate;
+    @Column(name = "delete_at")
+    private LocalDateTime deleteAt;
 
-//    @OneToMany(mappedBy = "posts")
-//    private Collection<PostFavorite> postFavorites;
+    @OneToMany(mappedBy = "posts")
+    private Collection<PostFavorite> postFavorites;
+
+    @OneToMany(mappedBy = "posts")
+    private List<PostPhotos> postPhotos;
 }
