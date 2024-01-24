@@ -39,6 +39,9 @@ public class Posts {
     @Column(name = "detail_address")
     private String detailAddress;
 
+    @Column(name = "neighborhood", nullable = false)
+    private String neighborhood;
+
     @Column(name = "latitude", nullable = false)
     private String latitude;
 

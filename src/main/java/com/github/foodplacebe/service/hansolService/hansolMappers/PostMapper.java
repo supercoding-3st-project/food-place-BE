@@ -28,5 +28,6 @@ public interface PostMapper {
     @Mapping(target = "viewCount", expression = "java(0)")
     @Mapping(target = "userEntity", source = "userEntity")
     @Mapping(target = "postPhotos", ignore = true)
-    Posts postRegisterRequestToPosts(PostRegisterRequest postRegisterRequest, UserEntity userEntity);
+    @Mapping(target = "neighborhood", source = "neighborhood")
+    Posts postRegisterRequestToPosts(PostRegisterRequest postRegisterRequest, UserEntity userEntity, String neighborhood);
 }
