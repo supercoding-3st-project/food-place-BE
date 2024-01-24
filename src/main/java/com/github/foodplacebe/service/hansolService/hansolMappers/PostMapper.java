@@ -1,9 +1,11 @@
-package com.github.foodplacebe.service.mappers;
+package com.github.foodplacebe.service.hansolService.hansolMappers;
 
 import com.github.foodplacebe.repository.postPhotos.PostPhotos;
 import com.github.foodplacebe.repository.posts.Posts;
+import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.web.dto.hansolDto.PostDetailResponse;
 import com.github.foodplacebe.web.dto.hansolDto.PostPhotoDto;
+import com.github.foodplacebe.web.dto.hansolDto.PostRegisterRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -21,4 +23,11 @@ public interface PostMapper {
     @Mapping(target="favoriteCount", source = "favoriteCount")
     @Mapping(target="userId", source = "posts.userEntity.userId")
     PostDetailResponse postsToPostDetailResponse(Posts posts, List<PostPhotoDto> postPhotoDtos, Integer favoriteCount);
+
+    @Mapping(target = "createAt", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "viewCount", expression = "java(0)")
+    @Mapping(target = "userEntity", source = "userEntity")
+    @Mapping(target = "postPhotos", ignore = true)
+    @Mapping(target = "neighborhood", source = "neighborhood")
+    Posts postRegisterRequestToPosts(PostRegisterRequest postRegisterRequest, UserEntity userEntity, String neighborhood);
 }
