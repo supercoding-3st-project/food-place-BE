@@ -107,4 +107,8 @@ public class PostService {
         return new ResponseDto(200, "맛집 게시물 조회 성공", findPostsResponse);
     }
 
+    public ResponseDto searchPosts(String keyword, Pageable pageable) { // 게시물 이름(name), 메뉴(menu), 주소(address)로 검색
+        Page<FindPostsResponse> findPostsResponses = postsJpa.findPostsByKeywordByFavoriteCount(keyword, pageable);
+        return new ResponseDto(200, "키워드 검색 성공/ KEYWORD: " + keyword, findPostsResponses);
+    }
 }

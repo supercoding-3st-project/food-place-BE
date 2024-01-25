@@ -42,4 +42,14 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
                     "ORDER BY p.viewCount DESC, p.createAt DESC "
     )
     Page<FindPostsResponse> findPostsByAreaAndCategoryAndOrderOrderByViewCount(List<String> areaList, List<String> categoryList, Pageable pageable);
+
+    @Query(
+            "SELECT new com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse(" +
+                    "p.postId, p.name, p.neighborhood, p.category, p.menu, p.viewCount, p.mainPhoto, p.createAt, SIZE(p.postFavorites)) " +
+                    "FROM Posts p " +
+                    "WHERE p.name LIKE %?1% OR p.menu LIKE %?1% OR p.address LIKE %?1% " +
+                    "GROUP BY p.postId " +
+                    "ORDER BY SIZE(p.postFavorites) DESC, p.createAt DESC "
+    )
+    Page<FindPostsResponse> findPostsByKeywordByFavoriteCount(String keyword, Pageable pageable);
 }
