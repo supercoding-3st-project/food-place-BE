@@ -30,7 +30,7 @@ public class PostController {
         return postService.findPosts(area, category, order, pageable);
     }
 
-    @GetMapping("/posts-search")
+    @GetMapping("/posts-search") // 검색 기능(게시글 이름, 메뉴, 주소)
     public ResponseDto searchPosts(@RequestParam("q") String keyword, Pageable pageable ) {
         return postService.searchPosts(keyword, pageable);
     }
