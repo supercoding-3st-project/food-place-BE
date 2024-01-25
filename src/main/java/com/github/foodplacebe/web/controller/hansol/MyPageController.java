@@ -25,4 +25,9 @@ public class MyPageController {
     public ResponseDto findMyFavorite(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable) {
         return myPageService.findMyFavorite(customUserDetails, pageable);
     }
+
+    @GetMapping("/find-my-info")
+    public ResponseDto findMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return myPageService.findMyInfo(customUserDetails);
+    }
 }
