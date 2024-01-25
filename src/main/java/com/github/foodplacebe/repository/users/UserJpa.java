@@ -1,5 +1,9 @@
 package com.github.foodplacebe.repository.users;
 
+import com.github.foodplacebe.repository.posts.Posts;
+import com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

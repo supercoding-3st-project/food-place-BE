@@ -34,4 +34,6 @@ public class PostController {
     public ResponseDto searchPosts(@RequestParam("q") String keyword, Pageable pageable ) {
         return postService.searchPosts(keyword, pageable);
     }
+
+
 }
