@@ -2,6 +2,7 @@ package com.github.foodplacebe.web.controller.authAccount;
 
 import com.github.foodplacebe.service.authAccount.SignUpLoginService;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
+import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.LoginRequest;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
@@ -56,8 +57,23 @@ public class SignUpLoginController {
 
 
     @GetMapping("/sign-up/check-email")
-    public boolean checkEmail(HttpServletRequest httpServletRequest){
-        return signUpLoginService.checkEmail(httpServletRequest.getParameter("email"));
+    public ResponseEntity<ResponseDto> checkEmail(HttpServletRequest httpServletRequest){
+        ResponseDto responseDto = signUpLoginService.checkEmail(httpServletRequest.getParameter("email"));
+        boolean codeIsOk = responseDto.getCode()==HttpStatus.OK.value();
+        return new ResponseEntity<>(responseDto
+                , codeIsOk ? HttpStatus.OK:HttpStatus.CONFLICT);
+    }
+    @GetMapping("/sign-up/check-nickname")
+    public ResponseEntity<ResponseDto> checkNickname(HttpServletRequest httpServletRequest){
+        ResponseDto responseDto = signUpLoginService.checkNickname(httpServletRequest.getParameter("nickname"));
+        boolean codeIsOk = responseDto.getCode()==HttpStatus.OK.value();
+        return new ResponseEntity<>(responseDto
+                , codeIsOk ? HttpStatus.OK:HttpStatus.CONFLICT);
+    }
+
+    @PostMapping("/find-email")
+    public ResponseDto findEmailByBirth(@RequestBody AccountDto nickNameAndBirth){
+        return signUpLoginService.findEmailByBirth(nickNameAndBirth);
     }
 
     @PostMapping("/login")

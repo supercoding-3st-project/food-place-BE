@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+//@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AccountPatchDto {
     private String name;
     private String email;

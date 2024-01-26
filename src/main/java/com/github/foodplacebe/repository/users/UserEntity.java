@@ -71,13 +71,15 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity")
     private Collection<UserRoles> userRoles;
 
+    @OneToMany(mappedBy = "userEntity")
+    private Collection<Posts> posts;
+
     public enum Gender {
         남성, 여성, 불명
     }
 
 
-    @OneToMany(mappedBy = "userEntity")
-    private Collection<Posts> posts;
+
 
 //    @OneToMany(mappedBy = "userEntity")
 //    private Collection<PostFavorite> postFavorites;
