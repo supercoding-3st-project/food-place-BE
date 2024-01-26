@@ -1,5 +1,6 @@
 package com.github.foodplacebe.repository.posts;
 
+import com.github.foodplacebe.repository.comments.Comments;
 import com.github.foodplacebe.repository.postFavorite.PostFavorite;
 import com.github.foodplacebe.repository.postPhotos.PostPhotos;
 import com.github.foodplacebe.repository.users.UserEntity;
@@ -76,4 +77,7 @@ public class Posts {
 
     @OneToMany(mappedBy = "posts")
     private List<PostPhotos> postPhotos;
+
+    @OneToMany(mappedBy = "posts")
+    private List<Comments> comments;
 }
