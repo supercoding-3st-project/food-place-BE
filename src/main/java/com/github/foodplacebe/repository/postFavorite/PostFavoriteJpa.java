@@ -9,5 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface PostFavoriteJpa extends JpaRepository<PostFavorite, Integer> {
     PostFavorite findByUserEntityAndPosts(UserEntity userEntity, Posts posts);
 
+    void deleteAllByPosts(Posts posts);
+
     void deleteByUserEntityAndPosts(UserEntity userEntity, Posts Posts);
 }

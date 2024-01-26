@@ -39,6 +39,9 @@ public class Posts {
     @Column(name = "detail_address")
     private String detailAddress;
 
+    @Column(name = "neighborhood", nullable = false)
+    private String neighborhood;
+
     @Column(name = "latitude", nullable = false)
     private String latitude;
 
@@ -57,13 +60,13 @@ public class Posts {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "view_count", nullable = false, columnDefinition = "DEFAULT 0")
+    @Column(name = "view_count", columnDefinition = "DEFAULT 200")
     private Integer viewCount;
 
     @Column(name = "main_photo")
     private String mainPhoto;
 
-    @Column(name = "create_at", nullable = false, columnDefinition = "DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "create_at",columnDefinition = "DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createAt;
 
     @Column(name = "update_at")
