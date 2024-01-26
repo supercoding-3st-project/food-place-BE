@@ -1,17 +1,19 @@
 package com.github.foodplacebe.repository.commentFavorite;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.foodplacebe.repository.comments.Comments;
 import com.github.foodplacebe.repository.users.UserEntity;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "comment_favorite")
 @Getter
 @Setter
 @EqualsAndHashCode(of = "CommentFavoriteId")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class CommentFavorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +21,11 @@ public class CommentFavorite {
     private Integer CommentFavoriteId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
+
     @ManyToOne
-    @JoinColumn(name = "comment_id", nullable = false)
+    @JoinColumn(name = "comment_id")
     private Comments comments;
 }
