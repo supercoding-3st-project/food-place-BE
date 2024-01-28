@@ -1,5 +1,6 @@
 package com.github.foodplacebe.repository.posts;
 
+import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import java.util.List;
 @Repository
 public interface PostsJpa extends JpaRepository<Posts, Integer> {
 
+    Posts findByUserEntityAndPostId(UserEntity userEntity,Integer postId);
     @Query(
             "SELECT new com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse(" +
                     "p.postId, p.name, p.neighborhood, p.category, p.menu, p.viewCount, p.mainPhoto, p.createAt, SIZE(p.postFavorites)) " +
