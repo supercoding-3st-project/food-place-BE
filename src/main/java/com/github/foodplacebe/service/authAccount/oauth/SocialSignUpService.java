@@ -2,6 +2,7 @@ package com.github.foodplacebe.service.authAccount.oauth;
 
 import com.github.foodplacebe.config.security.JwtTokenConfig;
 import com.github.foodplacebe.service.mappers.UserMapper;
+import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.SignUpResponse;
 import com.github.foodplacebe.web.dto.account.SocialAccountDto;
 import com.github.foodplacebe.web.dto.account.oauth.server.OAuthInfoResponse;
@@ -43,6 +44,12 @@ public class SocialSignUpService {
         Long socialId = oAuthInfoResponse.getSocialId();
 
         UserEntity userEntity = userJpa.findBySocialId(socialId);
+        if (userEntity==null){
+            userEntity = userJpa.findBySocialId(socialId*2);
+            if(userEntity!=null){
+                throw new ConflictException("소셜 계정과 연동 시키다 취소된 계정이 있습니다. 연동 시키겠습니까?", String.valueOf(userEntity.getSocialId()));
+            }
+        }
         if(userEntity!=null){
             if(userEntity.getStatus().equals("temp")){
                 SocialAccountDto socialAccountDto = new SocialAccountDto();
@@ -70,8 +77,8 @@ public class SocialSignUpService {
                                         socialSettingService.makeSocialTemp(socialAccountDto);
                                         return new NotFoundSocialAccount(socialAccountDto, "회원가입이 필요합니다. 회원가입 하시겠습니까?");
                                     });
-                            socialSettingService.socialIdSet(userEntityEmail, socialId);
-                            return new ConflictException("소셜 이메일과 동일한 이메일로 가입된 계정이 있습니다. 소셜 계정과 연동 시키겠습니까?", email);
+                            socialSettingService.socialIdSet(userEntityEmail, socialId*2);
+                            return new ConflictException("소셜 이메일과 동일한 이메일로 가입된 계정이 있습니다. 소셜 계정과 연동 시키겠습니까?", String.valueOf(socialId*2));
                         });
                 break;
             case "NAVER":
@@ -85,24 +92,26 @@ public class SocialSignUpService {
         ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.", signUpResponse);
 
 
-
-
         return Arrays.asList(jwtTokenConfig.createToken(userEntity.getEmail(), roles), responseDto);
     }
 
     public ResponseEntity<ResponseDto> connectAccount(boolean isConnect, Long socialId) {
+        UserEntity userEntity = userJpa.findBySocialId(socialId);
+        if (userEntity==null) throw new NotFoundException("연결하거나 연결 취소할 계정을 찾을 수 없습니다.", socialId);
+        SignUpResponse signUpResponse = UserMapper.INSTANCE.userEntityToSignUpResponse(userEntity);
 
         if(isConnect) {
             return new ResponseEntity<>(
                     new ResponseDto(HttpStatus.CREATED.value(),
-                    "소셜 연결이 완료 되었습니다."),
+                    "소셜 연결이 완료 되었습니다.", signUpResponse),
                     HttpStatus.CREATED
             );
         }else {
-            socialSettingService.cancelConnect(socialId);
+            socialSettingService.cancelConnect(userEntity);
+
             return new ResponseEntity<>(
                     new ResponseDto(HttpStatus.ACCEPTED.value(),
-                            "소셜 연결이 취소 되었습니다."),
+                            "소셜 연결이 취소 되었습니다.",signUpResponse),
                     HttpStatus.ACCEPTED
             );
         }
@@ -110,8 +119,10 @@ public class SocialSignUpService {
 
 
     public ResponseEntity<ResponseDto> socialSignUpFix(boolean isSignUp, Long socialId, SignUpRequest signUpRequest) {
-        UserEntity userEntity = userJpa.findBySocialIdJoin(socialId)
-                .orElseThrow(()-> new NotFoundException("가입중인 계정이 없습니다.", socialId.toString()));
+        UserEntity userEntity = userJpa.findBySocialId(socialId);
+
+        if(userEntity == null) throw new NotFoundException("가입중인 계정이 없습니다.", socialId.toString());
+        if(!userEntity.getStatus().equals("temp")) throw new ConflictException("알 수 없는 충돌 에러", socialId.toString());
         if(!isSignUp){
             socialSettingService.deleteSigningUpAccount(userEntity);
             return new ResponseEntity<>(

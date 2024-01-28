@@ -57,18 +57,12 @@ public class SignUpLoginController {
 
 
     @GetMapping("/sign-up/check-email")
-    public ResponseEntity<ResponseDto> checkEmail(HttpServletRequest httpServletRequest){
-        ResponseDto responseDto = signUpLoginService.checkEmail(httpServletRequest.getParameter("email"));
-        boolean codeIsOk = responseDto.getCode()==HttpStatus.OK.value();
-        return new ResponseEntity<>(responseDto
-                , codeIsOk ? HttpStatus.OK:HttpStatus.CONFLICT);
+    public ResponseDto checkEmail(HttpServletRequest httpServletRequest){
+        return signUpLoginService.checkEmail(httpServletRequest.getParameter("email"));
     }
     @GetMapping("/sign-up/check-nickname")
-    public ResponseEntity<ResponseDto> checkNickname(HttpServletRequest httpServletRequest){
-        ResponseDto responseDto = signUpLoginService.checkNickname(httpServletRequest.getParameter("nickname"));
-        boolean codeIsOk = responseDto.getCode()==HttpStatus.OK.value();
-        return new ResponseEntity<>(responseDto
-                , codeIsOk ? HttpStatus.OK:HttpStatus.CONFLICT);
+    public ResponseDto checkNickname(HttpServletRequest httpServletRequest){
+        return signUpLoginService.checkNickname(httpServletRequest.getParameter("nickname"));
     }
 
     @PostMapping("/find-email")
