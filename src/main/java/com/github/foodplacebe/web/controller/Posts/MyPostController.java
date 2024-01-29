@@ -1,8 +1,8 @@
-package com.github.foodplacebe.web.controller.eunji;
+package com.github.foodplacebe.web.controller.Posts;
 
 
 import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
-import com.github.foodplacebe.service.eunjiService.MyPostService;
+import com.github.foodplacebe.service.PostsService.MyPostService;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;

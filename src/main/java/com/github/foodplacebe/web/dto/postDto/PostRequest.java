@@ -1,4 +1,4 @@
-package com.github.foodplacebe.web.dto.eunjiDto;
+package com.github.foodplacebe.web.dto.postDto;
 
 import com.github.foodplacebe.web.dto.hansolDto.PostPhotoDto;
 import lombok.*;
@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,12 +14,12 @@ public class PostRequest {
     private String name;
     private String content;
     private String category;
-    private String contact_num;
+    private String contactNum;
     private String address;
-    private String detail_address;
+    private String detailAddress;
     private String latitude;
     private String longitude;
-    private String main_photo;
-    private List<PostPhotoDto> postPhotoDtos;
+    private String mainPhoto;
+    private List<String> postPhotos;
 
 }

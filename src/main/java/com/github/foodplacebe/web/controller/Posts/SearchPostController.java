@@ -1,17 +1,11 @@
-package com.github.foodplacebe.web.controller.eunji;
+package com.github.foodplacebe.web.controller.Posts;
 
-import com.github.foodplacebe.repository.posts.Posts;
-import com.github.foodplacebe.service.eunjiService.SearchPostService;
+import com.github.foodplacebe.service.PostsService.SearchPostService;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.slf4j.Logger;

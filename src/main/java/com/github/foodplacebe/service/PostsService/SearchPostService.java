@@ -1,9 +1,8 @@
-package com.github.foodplacebe.service.eunjiService;
+package com.github.foodplacebe.service.PostsService;
 
 import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.repository.posts.PostsJpa;
-import com.github.foodplacebe.web.dto.eunjiDto.SearchResponse;
-import com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse;
+import com.github.foodplacebe.web.dto.postDto.SearchResponse;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service

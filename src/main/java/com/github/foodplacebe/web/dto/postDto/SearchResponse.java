@@ -1,4 +1,4 @@
-package com.github.foodplacebe.web.dto.eunjiDto;
+package com.github.foodplacebe.web.dto.postDto;
 
 import com.github.foodplacebe.repository.postFavorite.PostFavoriteJpa;
 import com.github.foodplacebe.repository.posts.Posts;

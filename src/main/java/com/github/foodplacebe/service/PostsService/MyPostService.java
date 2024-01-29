@@ -1,4 +1,4 @@
-package com.github.foodplacebe.service.eunjiService;
+package com.github.foodplacebe.service.PostsService;
 
 import com.github.foodplacebe.repository.postFavorite.PostFavoriteJpa;
 import com.github.foodplacebe.repository.posts.Posts;
@@ -7,7 +7,7 @@ import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
 import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
-import com.github.foodplacebe.web.dto.eunjiDto.SearchResponse;
+import com.github.foodplacebe.web.dto.postDto.SearchResponse;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
