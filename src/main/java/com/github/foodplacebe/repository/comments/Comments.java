@@ -52,5 +52,15 @@ public class Comments {
     private LocalDateTime updateAt;
 
     @OneToMany(mappedBy = "comments")
-    private List<CommentFavorite> commentFavorites;
+    private Collection<CommentFavorite> commentFavorites;
+
+
+
+    @ManyToOne
+    @JoinColumn(name = "parent_comment_id", insertable = false, updatable = false)
+    private Comments parentComment;
+
+    @OneToMany(mappedBy = "parentComment")
+    private Collection<Comments> childComments;
+
 }

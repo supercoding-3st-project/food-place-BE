@@ -1,5 +1,6 @@
 package com.github.foodplacebe.config.security.oauth.client;
 
+import com.github.foodplacebe.service.exceptions.BadRequestException;
 import com.github.foodplacebe.web.dto.account.oauth.server.KakaoInfoResponse;
 import com.github.foodplacebe.config.security.oauth.KakaoTokens;
 import com.github.foodplacebe.web.dto.account.oauth.server.OAuthInfoResponse;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -53,10 +55,13 @@ public class KakaoApiClient implements OAuthApiClient {
 
         HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
-        KakaoTokens response = restTemplate.postForObject(url, request, KakaoTokens.class);
-
-        assert response != null;
-        return response.getAccessToken();
+        try {
+            KakaoTokens response = restTemplate.postForObject(url, request, KakaoTokens.class);
+            assert response != null;
+            return response.getAccessToken();
+        }catch (HttpClientErrorException.BadRequest badRequest){
+            throw new BadRequestException("전달된 code가 만료되었습니다.", body.getFirst("code"));
+        }
     }
 
     @Override

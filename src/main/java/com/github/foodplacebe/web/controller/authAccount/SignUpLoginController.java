@@ -2,6 +2,7 @@ package com.github.foodplacebe.web.controller.authAccount;
 
 import com.github.foodplacebe.service.authAccount.SignUpLoginService;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
+import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.LoginRequest;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
@@ -56,8 +57,17 @@ public class SignUpLoginController {
 
 
     @GetMapping("/sign-up/check-email")
-    public boolean checkEmail(HttpServletRequest httpServletRequest){
+    public ResponseDto checkEmail(HttpServletRequest httpServletRequest){
         return signUpLoginService.checkEmail(httpServletRequest.getParameter("email"));
+    }
+    @GetMapping("/sign-up/check-nickname")
+    public ResponseDto checkNickname(HttpServletRequest httpServletRequest){
+        return signUpLoginService.checkNickname(httpServletRequest.getParameter("nickname"));
+    }
+
+    @PostMapping("/find-email")
+    public ResponseDto findEmailByBirth(@RequestBody AccountDto nickNameAndBirth){
+        return signUpLoginService.findEmailByBirth(nickNameAndBirth);
     }
 
     @PostMapping("/login")

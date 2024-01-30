@@ -23,6 +23,7 @@ public interface UserJpa extends JpaRepository<UserEntity, Integer> {
 
     UserEntity findByEmail(String email);
     UserEntity findBySocialId(Long socialId);
+    Optional<UserEntity> findByNickName(String nickName);
 
     @Query(
             "SELECT ue " +

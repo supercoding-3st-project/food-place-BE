@@ -15,6 +15,7 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
 
     List<Posts> findAllByUserEntity(UserEntity userEntity);
 
+    Posts findByUserEntityAndPostId(UserEntity userEntity,Integer postId);
     @Query(
             "SELECT new com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse(" +
                     "p.postId, p.name, p.neighborhood, p.category, p.menu, p.viewCount, p.mainPhoto, p.createAt, SIZE(p.postFavorites)) " +
