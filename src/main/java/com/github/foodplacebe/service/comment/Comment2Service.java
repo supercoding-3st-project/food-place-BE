@@ -7,17 +7,16 @@ import com.github.foodplacebe.repository.posts.PostsJpa;
 import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
 import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
+import com.github.foodplacebe.service.exceptions.AccessDenied;
 import com.github.foodplacebe.service.exceptions.BadRequestException;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
 import com.github.foodplacebe.web.dto.comment.CommentCreationDTO;
 import com.github.foodplacebe.web.dto.comment.CommentModifyDTO;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 import com.github.foodplacebe.repository.commentFavorite.CommentFavoriteJpa;
 import com.github.foodplacebe.repository.comments.CommentsJpa;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.github.foodplacebe.web.dto.comment.CommentResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,20 +58,24 @@ public class Comment2Service {
     }
 
     public ResponseDto addComment(CustomUserDetails customUserDetails, CommentCreationDTO commentCreationDTO) {
+        if(customUserDetails == null ){
+            throw new AccessDenied("로그인을 해주세요.", "");
+        }
+
         UserEntity authUser = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(()->new NotFoundException("User not found", customUserDetails.getUserId()));
+                .orElseThrow(()->new NotFoundException("User not found", ""));
 
         Posts post = postsJpa.findById(commentCreationDTO.getPostId())
-                .orElseThrow(()->new NotFoundException("Post not found", commentCreationDTO.getPostId()));
+                .orElseThrow(()->new NotFoundException("Post not found", "postId : " + commentCreationDTO.getPostId()));
 
         if( authUser.getUserId().equals( commentCreationDTO.getUserId() ) == false ) {
-            throw new NotFoundException("Auth Error", commentCreationDTO.getUserId() );
+            throw new NotFoundException("Auth Error", "" );
         }
 
         if( commentCreationDTO.getParentCommentId() != null ) {
             boolean isChk = commentsJpa.existsByCommentIdAndDeleteStatus(commentCreationDTO.getParentCommentId(), false);
             if( isChk == false ){
-                throw new NotFoundException("Parent Comment not found", commentCreationDTO.getParentCommentId());
+                throw new NotFoundException("Parent Comment not found", "commentId : " + commentCreationDTO.getParentCommentId());
             }
         }
 
@@ -85,15 +88,19 @@ public class Comment2Service {
         comment.setDeleteStatus(false);
         commentsJpa.save(comment);
 
-        return new ResponseDto(200, "댓글 등록 완료", comment.getCommentId() );
+        return new ResponseDto(200, "댓글 등록 완료", "commentId : "+comment.getCommentId() );
     }
 
     public ResponseDto modifyComment(CustomUserDetails customUserDetails, CommentModifyDTO commentModifyDTO) {
+        if(customUserDetails == null ){
+            throw new AccessDenied("로그인을 해주세요.", "");
+        }
+
         UserEntity authUser = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(() -> new NotFoundException("User not found", customUserDetails.getUserId()));
+                .orElseThrow(() -> new NotFoundException("User not found", ""));
 
         Posts post = postsJpa.findById(commentModifyDTO.getPostId())
-                .orElseThrow(() -> new NotFoundException("Post not found", commentModifyDTO.getPostId()));
+                .orElseThrow(() -> new NotFoundException("Post not found", "postId : " + commentModifyDTO.getPostId()));
 
         Comments comment = commentsJpa.findByCommentIdAndDeleteStatus(commentModifyDTO.getCommentId(), false);
         if (comment == null) {
@@ -107,40 +114,48 @@ public class Comment2Service {
         comment.setUpdateAt(LocalDateTime.now());
         commentsJpa.save(comment);
 
-        return new ResponseDto(200, "댓글 수정 완료,", comment.getCommentId());
+        return new ResponseDto(200, "댓글 수정 완료,", "commentId : " + comment.getCommentId());
     }
 
 
     public ResponseDto deleteComment(CustomUserDetails customUserDetails, Integer commentId) {
+        if(customUserDetails == null ){
+            throw new AccessDenied("로그인을 해주세요.", "");
+        }
+
         UserEntity authUser = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(()->new NotFoundException("User not found", customUserDetails.getUserId()));
+                .orElseThrow(()->new NotFoundException("User not found", ""));
 
         Comments comment = commentsJpa.findByCommentIdAndDeleteStatus(commentId, false);
         if( comment == null ){
-            throw new NotFoundException("Comment not found", commentId);
+            throw new NotFoundException("Comment not found", "commentId : " + commentId);
         }
 
         if( comment.getDeleteStatus() ) {
-            throw new BadRequestException("Already NotFound Comment", commentId);
+            throw new BadRequestException("Already NotFound Comment", "commentId : " + commentId);
         }
 
         comment.setDeleteStatus(true);
         comment.setDeleteAt(LocalDateTime.now());
         commentsJpa.save(comment);
 
-        return new ResponseDto(200, "댓글 삭제 완료", comment.getCommentId() );
+        return new ResponseDto(200, "댓글 삭제 완료", "commentId : " + comment.getCommentId() );
     }
 
     public ResponseDto toggleCommentLike(CustomUserDetails customUserDetails, Integer commentId) {
+        if(customUserDetails == null ){
+            throw new AccessDenied("로그인을 해주세요.", "");
+        }
+
         UserEntity authUser = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(()->new NotFoundException("User not found", customUserDetails.getUserId()));
+                .orElseThrow(()->new NotFoundException("User not found", ""));
         Comments comment = commentsJpa.findByCommentIdAndDeleteStatus(commentId, false);
         if( comment == null ){
-            throw new NotFoundException("Comment not found", commentId);
+            throw new NotFoundException("Comment not found", "commentId : " + commentId);
         }
 
         if( comment.getDeleteStatus() ) {
-            throw new BadRequestException("Already NotFound Comment", commentId);
+            throw new BadRequestException("Already NotFound Comment", "commentId : " + commentId);
         }
 
         CommentFavorite commentFavorite = commentFavoriteJpa.findByUserEntityAndComments(authUser,comment);
@@ -149,10 +164,10 @@ public class Comment2Service {
             newCommentFavorite.setComments(comment);
             newCommentFavorite.setUserEntity(authUser);
             commentFavoriteJpa.save(newCommentFavorite);
-            return new ResponseDto(200, "댓글 좋아요 완료 ", commentId );
+            return new ResponseDto(200, "댓글 좋아요 완료 ", "commentId : " + commentId );
         } else {
-            commentFavoriteJpa.deleteByUserEntityAndComments(authUser, comment);
-            return new ResponseDto(200, "댓글 좋아요 취소 완료 ", commentId );
+            commentFavoriteJpa.deleteById(commentFavorite.getCommentFavoriteId());
+            return new ResponseDto(200, "댓글 좋아요 취소 완료 ", "commentId : " + commentId );
         }
     }
 }

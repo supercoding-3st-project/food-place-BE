@@ -13,4 +13,5 @@ public interface CommentFavoriteJpa extends JpaRepository<CommentFavorite, Integ
     void deleteByUserEntityAndComments(UserEntity userEntity, Comments comments);
 
     int countByCommentsCommentId(Integer commentId);
+    void deleteById(Integer commentFavoritedId);
 }

@@ -1,6 +1,5 @@
 package com.github.foodplacebe.web.controller.comment;
 
-import com.github.foodplacebe.repository.comments.Comments;
 import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
 import com.github.foodplacebe.service.comment.Comment2Service;
 import com.github.foodplacebe.web.dto.comment.CommentCreationDTO;
@@ -8,10 +7,8 @@ import com.github.foodplacebe.web.dto.comment.CommentModifyDTO;
 import com.github.foodplacebe.web.dto.comment.CommentResponseDTO;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
