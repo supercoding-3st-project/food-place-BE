@@ -42,4 +42,6 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
                     "ORDER BY p.viewCount DESC, p.createAt DESC "
     )
     Page<FindPostsResponse> findPostsByAreaAndCategoryAndOrderOrderByViewCount(List<String> areaList, List<String> categoryList, Pageable pageable);
+
+    Page<FindPostsResponse> findTopByOrderByViewCountDesc(int count, Pageable pageable);
 }
