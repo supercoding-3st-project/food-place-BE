@@ -17,15 +17,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/v1/api/comment")
 @RequiredArgsConstructor
 public class Comment2Controller {
     private final Comment2Service commentService;
-
-    @GetMapping("/test")
-    public String test(){
-        return "test";
-    }
 
     @GetMapping("/post/")
     public ResponseEntity<Page<CommentResponseDTO>> getCommentByPostId(
