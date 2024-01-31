@@ -122,6 +122,9 @@ public class SocialSignUpService {
         UserEntity userEntity = userJpa.findBySocialId(socialId);
 
         if(userEntity == null) throw new NotFoundException("가입중인 계정이 없습니다.", socialId.toString());
+        else if (signUpRequest.getNickName().length()>30) {
+            throw new BadRequestException("닉네임은 30자리 이하여야 합니다.", signUpRequest.getNickName());
+        }
         if(!userEntity.getStatus().equals("temp")) throw new ConflictException("알 수 없는 충돌 에러", socialId.toString());
         if(!isSignUp){
             socialSettingService.deleteSigningUpAccount(userEntity);
