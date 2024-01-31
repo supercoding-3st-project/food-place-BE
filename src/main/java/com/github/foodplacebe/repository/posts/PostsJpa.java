@@ -15,6 +15,7 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
 
     List<Posts> findAllByUserEntity(UserEntity userEntity);
 
+    Posts findByUserEntityAndPostId(UserEntity userEntity,Integer postId);
     @Query(
             "SELECT new com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse(" +
                     "p.postId, p.name, p.neighborhood, p.category, p.menu, p.viewCount, p.mainPhoto, p.createAt, SIZE(p.postFavorites)) " +
@@ -73,4 +74,16 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
                     "ORDER BY pf.postFavoriteId DESC "
     )
     Page<FindPostsResponse> findAllByFavoriteByPagination(Integer userId, Pageable pageable);
+
+    @Query(
+            "SELECT new com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse(" +
+                    "p.postId, p.name, p.neighborhood, p.category, p.menu, p.viewCount, p.mainPhoto, p.createAt, SIZE(p.postFavorites)) " +
+                    "FROM Posts p " +
+                    "WHERE p.address = ?1 AND p.name = ?2 " +
+                    "GROUP BY p.postId "
+    )
+    List<FindPostsResponse> findFiveRelatedPosts(String address, String name);
+
+
 }
+

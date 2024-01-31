@@ -8,13 +8,13 @@ import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
 import com.github.foodplacebe.service.exceptions.NotAcceptableException;
 import com.github.foodplacebe.service.mappers.UserMapper;
-import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
 import com.github.foodplacebe.web.dto.account.SocialAccountDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +30,8 @@ public class SocialSettingService {
     private final UserJpa userJpa;
     private final RolesJpa rolesJpa;
     private final UserRolesJpa userRolesJpa;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(transactionManager = "tm")
     public void socialIdSet(UserEntity userEntity, Long socialId) {
@@ -54,8 +56,7 @@ public class SocialSettingService {
     }
 
     @Transactional(transactionManager = "tm")
-    public void cancelConnect(Long socialId) {
-        UserEntity userEntity = userJpa.findBySocialId(socialId);
+    public void cancelConnect(UserEntity userEntity) {
         userEntity.setSocialId(null);
     }
 
@@ -70,6 +71,7 @@ public class SocialSettingService {
 
     @Transactional(transactionManager = "tm")
     public void loadSigningUpAccount(UserEntity existingUser, SignUpRequest signUpRequest) {
+        signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         UserEntity updateUser = UserMapper.INSTANCE.signUpRequestToUserEntity(signUpRequest);
         updateUser.setImageUrl(null);
         BeanUtils.copyProperties(updateUser, existingUser, getNullPropertyNames(updateUser));

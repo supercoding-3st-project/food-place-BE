@@ -9,12 +9,14 @@ import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
 import com.github.foodplacebe.service.exceptions.*;
 import com.github.foodplacebe.service.mappers.UserMapper;
+import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.LoginRequest;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
 import com.github.foodplacebe.web.dto.account.SignUpResponse;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +67,9 @@ public class SignUpLoginService {
             throw new ConflictException("이미 입력하신 "+signUpRequest.getEmail()+" 이메일로 가입된 계정이 있습니다.",signUpRequest.getEmail());
 //        }else if(userJpa.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
 //            throw new ConflictException("이미 입력하신 "+signUpRequest.getPhoneNumber()+" 핸드폰 번호로 가입된 계정이 있습니다.",signUpRequest.getPhoneNumber());
-        }else if(userJpa.existsByNickName(signUpRequest.getNickName())){
+        } else if (signUpRequest.getNickName().length()>30) {
+            throw new BadRequestException("닉네임은 30자리 이하여야 합니다.", signUpRequest.getNickName());
+        } else if(userJpa.existsByNickName(signUpRequest.getNickName())){
             throw new ConflictException("이미 입력하신 "+signUpRequest.getNickName()+" 닉네임으로 가입된 계정이 있습니다.",signUpRequest.getNickName());
         }
         else if(!password.matches("^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]+$")
@@ -99,6 +105,9 @@ public class SignUpLoginService {
 
     //로그인 로직
     public List<Object> login(LoginRequest loginRequest){
+        if(loginRequest.getEmail()==null||loginRequest.getPassword()==null){
+            throw new BadRequestException("이메일이나 비밀번호 값이 비어있습니다.","email : "+loginRequest.getEmail()+", password : "+loginRequest.getPassword());
+        }
         String requestEmail = loginRequest.getEmail();
         UserEntity userEntity;
 
@@ -162,10 +171,42 @@ public class SignUpLoginService {
         }
     }
 
-    public boolean checkEmail(String email) {
-        if (!email.matches(".+@.+\\..+")) {
+    public ResponseDto checkEmail(String email) {
+        if (email==null||!email.matches(".+@.+\\..+")) {
             throw new BadRequestException("이메일을 정확히 입력해주세요.",email);
         }
-        return !userJpa.existsByEmail(email);
+        boolean validEmail = !userJpa.existsByEmail(email);
+
+        return new ResponseDto(HttpStatus.OK.value(),
+                validEmail ? "사용 가능한 이메일 입니다."
+                        : "이미 사용중인 이메일 입니다.",
+                validEmail);
+    }
+
+    public ResponseDto checkNickname(String nickname) {
+        if (nickname==null) {
+            throw new BadRequestException("닉네임을 입력해주세요.", null);
+        }
+        boolean validNickName = !userJpa.existsByNickName(nickname);
+
+        return new ResponseDto(HttpStatus.OK.value(),
+                validNickName ? "사용 가능한 닉네임 입니다."
+                        : "이미 사용중인 닉네임 입니다.",
+                validNickName);
+    }
+
+    public ResponseDto findEmailByBirth(AccountDto nickNameAndBirth) {
+        String nickName = nickNameAndBirth.getNickName();
+        String birth = nickNameAndBirth.getDateOfBirth();
+        if(nickName==null||birth==null){
+            throw new BadRequestException("닉네임 또는 생년월일이 입력되지 않았습니다.", "닉네임 : "+nickName+", 생년월일 : "+birth);
+        }
+        UserEntity userEntity = userJpa.findByNickName(nickName)
+                .orElseThrow(()->new NotFoundException("가입 정보가 없습니다.", nickName));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if(LocalDate.parse(birth,formatter).equals(userEntity.getDateOfBirth())){
+            return new ResponseDto(HttpStatus.OK.value(), "생년월일 인증에 성공 하였습니다.", userEntity.getEmail());
+        }else throw new AccessDenied("인증에 실패 하였습니다.",birth);
     }
 }
