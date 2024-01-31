@@ -111,10 +111,6 @@ public class PostsService {
         String address = post.getAddress();
         String name = post.getName();
 
-        String[] orderArray = {"최신순", "인기순", "조회순"};
-        List<String> oderList = new ArrayList<>(Arrays.asList(orderArray));
-        if (!oderList.contains(order)) throw new BadRequestException("유효하지 않은 순서입니다.", order);
-
         List<FindPostsResponse> findPostsResponse;
 
         if(order.equals("최신순")) {
@@ -125,11 +121,11 @@ public class PostsService {
             findPostsResponse = postsJpa.findFiveRelatedPosts(address, name)
                     .stream().sorted(Comparator.comparing(FindPostsResponse::getFavoriteCount).reversed()).limit(5)
                     .collect(Collectors.toList());
-        }else {
+        }else if(order.equals("조회순")) {
             findPostsResponse = postsJpa.findFiveRelatedPosts(address, name)
                     .stream().sorted(Comparator.comparing(FindPostsResponse::getViewCount).reversed()).limit(5)
                     .collect(Collectors.toList());
-        }
+        }else throw new BadRequestException("유효하지 않은 순서입니다.", order);
 
         return new ResponseDto(200, "관련 게시물 조회 완료", findPostsResponse);
 
