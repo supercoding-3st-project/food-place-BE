@@ -27,10 +27,12 @@ public class Comments {
 
     @ManyToOne
     @JoinColumn(name = "post_id")
+    @JsonIgnore
     private Posts posts;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private UserEntity userEntity;
 
     @Column(name = "content", nullable = false)
