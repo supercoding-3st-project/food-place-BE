@@ -1,42 +1,43 @@
 package com.github.foodplacebe.web.controller.eunji;
 
+import com.github.foodplacebe.repository.posts.PostsJpa;
 import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
+import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.service.eunjiService.regPostService;
-import com.github.foodplacebe.web.dto.eunjiDto.PostRequest;
+import com.github.foodplacebe.web.dto.postDto.PostRequest;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api")
 @RequiredArgsConstructor
 public class regPostController {
     private final regPostService regPostService;
+    private final PostsJpa postsJpa;
 
-    @GetMapping("/get-post/{postId}")
-    public ResponseDto getPost(@PathVariable Integer postId){
-        return regPostService.getPost(postId);
-    }
-
-    @PostMapping("/get-post/{postId}")
-    public ResponseDto updatePost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                  @PathVariable Integer postId){
-        return regPostService.updatePost(customUserDetails, postId);
-    }
-
+    @Operation(summary = "맛집 게시물 작성")
     @PostMapping("/reg-post")
     public ResponseDto regPost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                               @RequestBody PostRequest postRequest)
-    {
-        return regPostService.regPost(customUserDetails,postRequest);
+                               @RequestPart(value = "postRequest") PostRequest postRequest,
+                               @RequestPart(value = "images") List<MultipartFile> multipartFiles) {
+
+        return regPostService.regPost(customUserDetails, postRequest, multipartFiles);
     }
 
-    @DeleteMapping("/get-post/{postId}")
-    public ResponseDto deletePost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+    @Operation(summary = "맛집 게시물 수정")
+    @PutMapping("/modify-post/{postId}")
+    public ResponseDto updatePost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                  @RequestPart PostRequest postRequest,
                                   @PathVariable Integer postId){
-        return regPostService.deletePost(customUserDetails, postId);
+
+        return regPostService.updatePost(customUserDetails, postRequest, postId);
     }
-
-
 }

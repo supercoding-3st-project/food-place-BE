@@ -6,9 +6,11 @@ import com.github.foodplacebe.repository.postPhotos.PostPhotos;
 import com.github.foodplacebe.repository.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -78,8 +80,8 @@ public class Posts {
     @OneToMany(mappedBy = "posts")
     private Collection<PostFavorite> postFavorites;
 
-    @OneToMany(mappedBy = "posts")
-    private List<PostPhotos> postPhotos;
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PostPhotos> postPhotos = new ArrayList<>();
 
     @OneToMany(mappedBy = "posts")
     private List<Comments> comments;
