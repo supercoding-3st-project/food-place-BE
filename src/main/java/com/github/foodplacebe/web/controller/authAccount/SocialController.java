@@ -20,20 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SocialController {
     private final SocialSignUpService socialSignUpService;
-    @GetMapping("/kakao")
-    public String kakaoLogin (@RequestParam final String code){
-        return code;
-    }
-    @GetMapping("/")
-    public String home() {
-        return "index";
-    }
-
-    @GetMapping("/success")
-    public CustomUserDetails success(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        return customUserDetails;
-    }
   
     @PostMapping("/kakao")
     public ResponseDto loginKakao(@RequestBody KakaoLoginParams params, HttpServletResponse httpServletResponse) {

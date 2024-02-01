@@ -186,6 +186,8 @@ public class SignUpLoginService {
     public ResponseDto checkNickname(String nickname) {
         if (nickname==null) {
             throw new BadRequestException("닉네임을 입력해주세요.", null);
+        }else if (nickname.length()>30) {
+            throw new BadRequestException("닉네임은 30자리 이하여야 합니다.", nickname);
         }
         boolean validNickName = !userJpa.existsByNickName(nickname);
 
