@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class SchedulerConfig {
     private final ScheduleService scheduleService;
 
-    @Scheduled(cron = "1 19 21 * * *")
+    @Scheduled(cron = "1 0 0,12 * * *")
     public void cleanupOldWithdrawnUserAndSetupOldProduct(){
         scheduleService.cleanupOldWithdrawnUser();
         log.info("탈퇴한지 7일 이상된 계정을 삭제 하였습니다.");
