@@ -1,4 +1,4 @@
-package com.github.foodplacebe.service.eunjiService;
+package com.github.foodplacebe.service.PostsService;
 
 import com.github.foodplacebe.repository.postPhotos.PostPhotos;
 import com.github.foodplacebe.repository.postPhotos.PostPhotosJpa;

@@ -40,9 +40,8 @@ public class MyPostService {
             searchResponse.setMainPhoto(post.getMainPhoto());
             searchResponse.setViewCount(post.getViewCount());
 
-            Integer favoriteCount = postFavoriteJpa.countByUserEntityAndPosts(userEntity, post);
-
-            searchResponse.setFavoriteCount(favoriteCount);
+            int likeCount = postFavoriteJpa.countByPostsPostId(post.getPostId());
+            searchResponse.setFavoriteCount(likeCount);
 
             searchResponses.add(searchResponse);
         }

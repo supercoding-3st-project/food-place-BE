@@ -1,4 +1,4 @@
-package com.github.foodplacebe.service.eunjiService;
+package com.github.foodplacebe.service.PostsService;
 
 import com.github.foodplacebe.repository.postPhotos.PostPhotos;
 import com.github.foodplacebe.repository.postPhotos.PostPhotosJpa;
@@ -7,7 +7,6 @@ import com.github.foodplacebe.repository.posts.PostsJpa;
 import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
 import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
-import com.github.foodplacebe.service.exceptions.BadRequestException;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
 import com.github.foodplacebe.web.dto.postDto.PostRequest;
 import com.github.foodplacebe.web.dto.postDto.PostResponse;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 

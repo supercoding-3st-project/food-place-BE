@@ -1,4 +1,4 @@
-package com.github.foodplacebe.service.eunjiService;
+package com.github.foodplacebe.service.PostsService;
 
 
 import com.amazonaws.services.s3.AmazonS3Client;

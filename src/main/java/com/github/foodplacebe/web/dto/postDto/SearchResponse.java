@@ -1,6 +1,5 @@
 package com.github.foodplacebe.web.dto.postDto;
 
-import com.github.foodplacebe.repository.postFavorite.PostFavoriteJpa;
 import com.github.foodplacebe.repository.posts.Posts;
 import lombok.*;
 
@@ -17,11 +16,12 @@ public class SearchResponse {
     private Integer viewCount;
     private Integer favoriteCount;
 
-    public SearchResponse(Posts posts){
+    public SearchResponse(Posts posts, int likeCount) {
         this.postId = posts.getPostId();
         this.userId = posts.getUserEntity().getUserId();
         this.name = posts.getName();
         this.mainPhoto = posts.getMainPhoto();
         this.viewCount = posts.getViewCount();
+        this.favoriteCount = likeCount;
     }
 }
