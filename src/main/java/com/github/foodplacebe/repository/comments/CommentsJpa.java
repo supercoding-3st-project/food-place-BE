@@ -4,6 +4,7 @@ import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.web.dto.hansolDto.CommentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Range;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,4 +24,11 @@ public interface CommentsJpa extends JpaRepository<Comments, Integer> {
             "WHERE c.posts.postId = ?1 AND c.parentCommentId = ?2 " +
             "ORDER BY c.commentId ASC ")
     Page<CommentResponse> findAllCommentsByCommentId(Integer postId, Integer parentCommentId, Pageable pageable);
+
+    Page<Comments> findByPostsPostIdAndParentCommentId(Integer postId, Integer parentCommentId, Pageable pageable);
+    Page<Comments> findByParentCommentId(Integer parentCommentId, Pageable pageable);
+
+    boolean existsByCommentIdAndDeleteStatus(Integer parentCommentId, boolean deleteStatus);
+
+    Comments findByCommentIdAndDeleteStatus(Integer commentId, boolean b);
 }

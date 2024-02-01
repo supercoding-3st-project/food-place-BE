@@ -20,7 +20,7 @@ public class PostController {
         return postService.postRegister(customUserDetails, postRegisterRequest);
     }
 
-    @GetMapping("/posts")
+    @GetMapping("/posts") // 맛집 목록 조회
     public ResponseDto findPosts(
             @RequestParam("area") String area,
             @RequestParam("category") String category,
@@ -29,4 +29,11 @@ public class PostController {
     ) {
         return postService.findPosts(area, category, order, pageable);
     }
+
+    @GetMapping("/posts-search")
+    public ResponseDto searchPosts(@RequestParam("q") String keyword, Pageable pageable ) {
+        return postService.searchPosts(keyword, pageable);
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.github.foodplacebe.repository.users;
 
+import com.github.foodplacebe.repository.postFavorite.PostFavorite;
 import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.repository.userRoles.UserRoles;
 import jakarta.persistence.*;
@@ -74,6 +75,9 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity")
     private Collection<Posts> posts;
 
+    @OneToMany(mappedBy = "userEntity")
+    private Collection<PostFavorite> postFavorites;
+
     public enum Gender {
         남성, 여성, 불명
     }
@@ -81,6 +85,5 @@ public class UserEntity {
 
 
 
-//    @OneToMany(mappedBy = "userEntity")
-//    private Collection<PostFavorite> postFavorites;
+
 }
