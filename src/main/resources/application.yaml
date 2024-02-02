@@ -23,13 +23,14 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
 cloud:
   aws:
     s3:
-      bucket: {bucket}
+      bucket: ${bucket}
     credentials:
-      access-key: {access-key}
-      secret-key: {secret-key}
+      access-key: ${access-key}
+      secret-key: ${secret-key}
     region:
       static: ap-northeast-2
       auto: false

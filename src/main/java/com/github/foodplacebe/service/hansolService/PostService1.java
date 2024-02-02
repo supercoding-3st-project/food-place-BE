@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class PostService1 {
     private final PostsJpa postsJpa;
     private final PostPhotosJpa postPhotosJpa;
     private final UserJpa userJpa;
