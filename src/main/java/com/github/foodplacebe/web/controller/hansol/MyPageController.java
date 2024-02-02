@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyPageController {
     private final MyPageService myPageService;
 
-    @GetMapping("/find-my-posts")
+    @GetMapping("/find-my-posts") // 내가 등록한 게시글 조회
     public ResponseDto findMyPosts(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable) {
         return myPageService.findMyPosts(customUserDetails, pageable);
     }
 
-    @GetMapping("/find-my-favorite")
+    @GetMapping("/find-my-favorite") // 내가 좋아요 누른 게시글 조회
     public ResponseDto findMyFavorite(@AuthenticationPrincipal CustomUserDetails customUserDetails, Pageable pageable) {
         return myPageService.findMyFavorite(customUserDetails, pageable);
     }
 
-    @GetMapping("/find-my-info")
+    @GetMapping("/find-my-info") // 마이페이지 내정보 조회
     public ResponseDto findMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return myPageService.findMyInfo(customUserDetails);
     }

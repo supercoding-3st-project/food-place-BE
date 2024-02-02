@@ -9,10 +9,17 @@ import com.github.foodplacebe.repository.posts.PostsJpa;
 import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
 import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
+import com.github.foodplacebe.service.exceptions.BadRequestException;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
+import com.github.foodplacebe.service.hansolService.hansolMappers.PostMapper;
 import com.github.foodplacebe.web.controller.authAccount.test.TestDto;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -172,5 +179,23 @@ public class TestService {
         response.put("작성일", comments.getCreateAt().format(dateTimeFormatter));
         response.put("내용", comments.getContent());
         return new ResponseDto(HttpStatus.OK.value(), "댓글 등록 성공", response);
+    }
+
+
+    public ResponseDto getAllPosts(Sort sort) {
+        List<Posts> postsList = postsJpa.findAll(Sort.by(Sort.Direction.DESC,"createAt"));
+        List<TestDto> testDtos = postsList.stream().map(p->PostMapper.INSTANCE.postsToTestDto(p)).toList();
+        return new ResponseDto(HttpStatus.OK.value(), " sort = "+sort+", 모든 게시글 조회 완료", testDtos);
+    }
+
+    public ResponseDto getPageablePosts(int page, int size, Sort sort) {
+        Pageable pageable = PageRequest.of(page, size, sort);
+        try {
+            Page<Posts> postsPage = postsJpa.findAll(pageable);
+            Page<TestDto> testDtoPage = postsPage.map(p->PostMapper.INSTANCE.postsToTestDto(p));
+            return new ResponseDto(HttpStatus.OK.value(), "page = "+pageable.getPageNumber()+" size = "+pageable.getPageSize()+" sort = "+pageable.getSort()+", 조회 완료", testDtoPage);
+        }catch (PropertyReferenceException propertyReferenceException){
+            throw new BadRequestException("잘못된 정렬 요청",sort.toString());
+        }
     }
 }
