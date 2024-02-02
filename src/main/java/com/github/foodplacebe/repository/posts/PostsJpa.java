@@ -49,6 +49,14 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
     Page<FindPostsResponse> findPostsByAreaAndCategoryAndOrderOrderByViewCount(List<String> areaList, List<String> categoryList, Pageable pageable);
 
 
+    Page<Posts> findByAddressContaining(String address, Pageable pageable);
+
+    Page<Posts> findByMenuContaining(String menu, Pageable pageable);
+
+    Page<Posts> findByNameContaining(String name, Pageable pageable);
+
+    List<Posts> findByUserEntity(UserEntity userEntity);
+
     @Query(
             "SELECT new com.github.foodplacebe.web.dto.posts.PostResponse(" +
                     "p.postId, p.name, p.neighborhood, p.category, p.menu, p.viewCount, p.mainPhoto, p.createAt, SIZE(p.postFavorites)) " +
