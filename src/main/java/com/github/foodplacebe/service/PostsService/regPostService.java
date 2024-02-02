@@ -64,7 +64,7 @@ public class regPostService {
 
         PostResponse response = configurationService.response(newPost);
 
-        return new ResponseDto(200, "게시물 등록 성공", "postId: " + response);
+        return new ResponseDto(200, "게시물 등록 성공",  response);
 
     }
 
@@ -90,7 +90,7 @@ public class regPostService {
                 .detailAddress(postRequest.getDetailAddress())
                 .build();
 
-        return new ResponseDto(200,"포스트 수정 완료", "postId : " + postId);
+        return new ResponseDto(200,"포스트 수정 완료",  postId);
     }
 
     private Posts checkMyPost(Integer postId, UserEntity userEntity) {
