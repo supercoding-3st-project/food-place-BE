@@ -67,7 +67,9 @@ public class SignUpLoginService {
             throw new ConflictException("이미 입력하신 "+signUpRequest.getEmail()+" 이메일로 가입된 계정이 있습니다.",signUpRequest.getEmail());
 //        }else if(userJpa.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
 //            throw new ConflictException("이미 입력하신 "+signUpRequest.getPhoneNumber()+" 핸드폰 번호로 가입된 계정이 있습니다.",signUpRequest.getPhoneNumber());
-        }else if(userJpa.existsByNickName(signUpRequest.getNickName())){
+        } else if (signUpRequest.getNickName().length()>30) {
+            throw new BadRequestException("닉네임은 30자리 이하여야 합니다.", signUpRequest.getNickName());
+        } else if(userJpa.existsByNickName(signUpRequest.getNickName())){
             throw new ConflictException("이미 입력하신 "+signUpRequest.getNickName()+" 닉네임으로 가입된 계정이 있습니다.",signUpRequest.getNickName());
         }
         else if(!password.matches("^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]+$")
@@ -175,7 +177,7 @@ public class SignUpLoginService {
         }
         boolean validEmail = !userJpa.existsByEmail(email);
 
-        return new ResponseDto(validEmail?HttpStatus.OK.value():HttpStatus.CONFLICT.value(),
+        return new ResponseDto(HttpStatus.OK.value(),
                 validEmail ? "사용 가능한 이메일 입니다."
                         : "이미 사용중인 이메일 입니다.",
                 validEmail);
@@ -187,7 +189,7 @@ public class SignUpLoginService {
         }
         boolean validNickName = !userJpa.existsByNickName(nickname);
 
-        return new ResponseDto(validNickName?HttpStatus.OK.value():HttpStatus.CONFLICT.value(),
+        return new ResponseDto(HttpStatus.OK.value(),
                 validNickName ? "사용 가능한 닉네임 입니다."
                         : "이미 사용중인 닉네임 입니다.",
                 validNickName);

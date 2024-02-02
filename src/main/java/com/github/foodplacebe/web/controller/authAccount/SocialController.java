@@ -54,7 +54,7 @@ public class SocialController {
     public ResponseEntity<ResponseDto> socialSignUp(
             @RequestParam(name = "is-sign-up") boolean isSignUp,
             @RequestParam(name = "social-id") Long socialId,
-            @RequestBody SignUpRequest signUpRequest){
+            @RequestBody(required = false) SignUpRequest signUpRequest){
         return socialSignUpService.socialSignUpFix(isSignUp, socialId, signUpRequest);
     }
 //    @PostMapping("/naver")
