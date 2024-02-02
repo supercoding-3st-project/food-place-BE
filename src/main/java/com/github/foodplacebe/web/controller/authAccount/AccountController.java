@@ -36,4 +36,9 @@ public class AccountController {
         return accountService.withdrawal(customUserDetails);
     }
 
+    @GetMapping("/my-info")
+    public ResponseDto getAccountInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        return accountService.getAccountInfo(customUserDetails);
+    }
+
 }

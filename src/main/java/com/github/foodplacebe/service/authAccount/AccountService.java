@@ -130,4 +130,12 @@ public class AccountService {
 
         return userEntity.getEmail()+" 계정 회원 탈퇴 완료";
     }
+
+    public ResponseDto getAccountInfo(CustomUserDetails customUserDetails) {
+        UserEntity userEntity = userJpa.findByEmailJoin(customUserDetails.getUsername())
+                .orElseThrow(()->new NotFoundException("계정 정보를 찾을 수 없습니다.",customUserDetails.getUsername()));
+
+        AccountDto accountDto = UserMapper.INSTANCE.userEntityToAccountDTO(userEntity);
+        return new ResponseDto(HttpStatus.OK.value(), "회원정보 조회 성공.", accountDto);
+    }
 }

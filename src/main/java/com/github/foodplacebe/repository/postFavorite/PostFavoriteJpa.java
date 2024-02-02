@@ -16,4 +16,5 @@ public interface PostFavoriteJpa extends JpaRepository<PostFavorite, Integer> {
     void deleteByUserEntityAndPosts(UserEntity userEntity, Posts Posts);
 
     List<PostFavorite> findByUserEntity(UserEntity userEntity);
+    int countByPostsPostId(Integer postId);
 }
