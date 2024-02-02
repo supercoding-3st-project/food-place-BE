@@ -82,10 +82,6 @@ public class Comment2Service {
         Posts post = postsJpa.findById(commentCreationDTO.getPostId())
                 .orElseThrow(()->new NotFoundException("게시물을 찾을 수 없습니다.", "postId : " + commentCreationDTO.getPostId()));
 
-        if( authUser.getUserId().equals( commentCreationDTO.getUserId() ) == false ) {
-            throw new NotFoundException("인증정보가 다릅니다. 다시 로그인해주세요.", "" );
-        }
-
         if( commentCreationDTO.getParentCommentId() != null ) {
             boolean isChk = commentsJpa.existsByCommentIdAndDeleteStatus(commentCreationDTO.getParentCommentId(), false);
             if( isChk == false ){
@@ -115,10 +111,6 @@ public class Comment2Service {
 
         Posts post = postsJpa.findById(commentModifyDTO.getPostId())
                 .orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다.", "postId : " + commentModifyDTO.getPostId()));
-
-        if( authUser.getUserId().equals( commentModifyDTO.getUserId() ) == false ) {
-            throw new NotFoundException("인증정보가 다릅니다. 다시 로그인해주세요.", "" );
-        }
 
         Comments comment = commentsJpa.findByCommentIdAndDeleteStatus(commentModifyDTO.getCommentId(), false);
         if (comment == null) {
