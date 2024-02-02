@@ -27,10 +27,10 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: ${bucket}
+      bucket: ${BUCKET}
     credentials:
-      access-key: ${access-key}
-      secret-key: ${secret-key}
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
     region:
       static: ap-northeast-2
       auto: false
