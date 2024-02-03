@@ -58,6 +58,7 @@ public class Comment2Service {
     }
 
     private CommentResponseDTO convertToCommentResponseDTO(Comments comment){
+        String profileImg = comment.getUserEntity().getImageUrl();
         int likeCount = commentFavoriteJpa.countByCommentsCommentId(comment.getCommentId());
         return new CommentResponseDTO(
                 comment.getPosts().getPostId(),
@@ -66,6 +67,7 @@ public class Comment2Service {
                 comment.getParentCommentId(),
                 comment.getContent(),
                 likeCount,
+                profileImg,
                 comment.getCreateAt(),
                 comment.getUpdateAt()
         );
