@@ -19,6 +19,22 @@ public class CommentResponseDTO {
     private Integer parentCommentId;
     private String content;
     private Integer likeCount;
-    private LocalDateTime createDate;
-    private LocalDateTime updateDate;
+    private String profileImg;
+    private String createDate;
+    private String updateDate;
+
+    public CommentResponseDTO(Integer postId, Integer userId, Integer commentId, Integer parentCommentId, String content, Integer likeCount, String profileImg, LocalDateTime createDate, LocalDateTime updateDate) {
+        this.postId = postId;
+        this.userId = userId;
+        this.commentId = commentId;
+        this.parentCommentId = parentCommentId;
+        this.content = content;
+        this.likeCount = likeCount;
+        this.profileImg = profileImg;
+        this.createDate = createDate.toString().substring(0,10);
+        this.updateDate = updateDate != null ? updateDate.toString().substring(0,10) : null;
+    }
 }
+
+
+
