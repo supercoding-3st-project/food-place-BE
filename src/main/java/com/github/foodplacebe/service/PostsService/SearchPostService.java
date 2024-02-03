@@ -11,8 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -21,45 +21,65 @@ public class SearchPostService {
     private final PostsJpa postsJpa;
     private final PostFavoriteJpa postFavoriteJpa;
 
+
     @Transactional(transactionManager = "tm")
     public ResponseDto findAddress(String address, Pageable pageable) {
         Page<Posts> postsList = postsJpa.findByAddressContaining(address, pageable);
 
-        List<SearchResponse> searchResponseList = postsList.stream()
-                .map(posts -> {
-                    int likeCount = postFavoriteJpa.countByPostsPostId(posts.getPostId());
-                    return new SearchResponse(posts, likeCount);
-                })
-                .collect(Collectors.toList());
+        if (postsList.isEmpty()) {
+            return new ResponseDto(400, "해당하는 포스트가 없습니다.", "address: " + address);
+        } else {
+            List<Posts> allPosts = postsList.getContent();
 
-        return new ResponseDto(200,"주소로 검색 완료", "address : " + searchResponseList);
+            List<SearchResponse> searchResponses = new ArrayList<>();
+
+            for (Posts post : allPosts) {
+                int likeCount = postFavoriteJpa.countByPostsPostId(post.getPostId());
+                searchResponses.add(new SearchResponse(post, likeCount));
+            }
+
+            return new ResponseDto(200, "주소로 검색 완료", searchResponses);
+        }
     }
+
 
     @Transactional(transactionManager = "tm")
     public ResponseDto findMenu(String menu, Pageable pageable) {
         Page<Posts> postsList = postsJpa.findByMenuContaining(menu, pageable);
 
-        List<SearchResponse> searchResponseList = postsList.stream()
-                .map(posts -> {
-                    int likeCount = postFavoriteJpa.countByPostsPostId(posts.getPostId());
-                    return new SearchResponse(posts, likeCount);
-                })
-                .collect(Collectors.toList());
+        if (postsList.isEmpty()) {
+            return new ResponseDto(400, "해당하는 포스트가 없습니다.", "address: " + menu);
+        } else {
+            List<Posts> allPosts = postsList.getContent();
 
-        return new ResponseDto(200,"메뉴로 검색 완료", "menu : " + searchResponseList);
+            List<SearchResponse> searchResponses = new ArrayList<>();
+
+            for (Posts post : allPosts) {
+                int likeCount = postFavoriteJpa.countByPostsPostId(post.getPostId());
+                searchResponses.add(new SearchResponse(post, likeCount));
+            }
+
+            return new ResponseDto(200, "메뉴로 검색 완료", searchResponses);
+        }
     }
 
     @Transactional(transactionManager = "tm")
     public ResponseDto findName(String name, Pageable pageable) {
         Page<Posts> postsList = postsJpa.findByNameContaining(name, pageable);
 
-        List<SearchResponse> searchResponseList = postsList.stream()
-                .map(posts -> {
-                    int likeCount = postFavoriteJpa.countByPostsPostId(posts.getPostId());
-                    return new SearchResponse(posts, likeCount);
-                })
-                .collect(Collectors.toList());
+        if (postsList.isEmpty()) {
+            return new ResponseDto(400, "해당하는 포스트가 없습니다.", "address: " + name);
+        } else {
+            List<Posts> allPosts = postsList.getContent();
 
-        return new ResponseDto(200,"이름으로 검색 완료", "name : " + searchResponseList);
+            List<SearchResponse> searchResponses = new ArrayList<>();
+
+            for (Posts post : allPosts) {
+                int likeCount = postFavoriteJpa.countByPostsPostId(post.getPostId());
+                searchResponses.add(new SearchResponse(post, likeCount));
+            }
+
+            return new ResponseDto(200, "이름으로 검색 완료", searchResponses);
+        }
     }
 }
