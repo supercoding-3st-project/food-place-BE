@@ -14,6 +14,7 @@ import com.github.foodplacebe.web.dto.comment.CommentCreationDTO;
 import com.github.foodplacebe.web.dto.comment.CommentModifyDTO;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.reactor.ReactorEnvironmentPostProcessor;
 import org.springframework.stereotype.Service;
 import com.github.foodplacebe.repository.commentFavorite.CommentFavoriteJpa;
 import com.github.foodplacebe.repository.comments.CommentsJpa;
@@ -32,15 +33,28 @@ public class Comment2Service {
     private final UserJpa userJpa;
     private final PostsJpa postsJpa;
 
-    public Page<CommentResponseDTO> getCommentsByPostId(Integer postId, Pageable pageable){
-        return commentsJpa.findByPostsPostIdAndParentCommentId(postId, 0, pageable)
+    public ResponseDto getCommentsByPostId(Integer postId, Pageable pageable){
+
+        Page<CommentResponseDTO> response = commentsJpa.findByPostsPostIdAndParentCommentId(postId, 0, pageable)
                 .map(this::convertToCommentResponseDTO);
+
+        if( response.getTotalElements() == 0 ){
+            return new ResponseDto(404, "NOT_FOUND", "해당 게시글에 댓글이 없습니다.");
+        }
+
+        return new ResponseDto(200, "댓글 조회(게시물) 완료", response );
     }
 
 
-    public Page<CommentResponseDTO> getCommentsByCommentId(Integer commentId, Pageable pageable){
-        return commentsJpa.findByParentCommentId(commentId, pageable)
+    public ResponseDto getCommentsByCommentId(Integer commentId, Pageable pageable){
+        Page<CommentResponseDTO> response = commentsJpa.findByParentCommentId(commentId, pageable)
                 .map(this::convertToCommentResponseDTO);
+
+        if( response.getTotalElements() == 0 ){
+            return new ResponseDto(404, "NOT_FOUND", "해당 댓글에 댓글이 없습니다.");
+        }
+
+        return new ResponseDto(200, "댓글 조회(댓글) 완료", response );
     }
 
     private CommentResponseDTO convertToCommentResponseDTO(Comments comment){
@@ -63,19 +77,15 @@ public class Comment2Service {
         }
 
         UserEntity authUser = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(()->new NotFoundException("User not found", ""));
+                .orElseThrow(()->new NotFoundException("유저정보를 찾을 수 없습니다.", ""));
 
         Posts post = postsJpa.findById(commentCreationDTO.getPostId())
-                .orElseThrow(()->new NotFoundException("Post not found", "postId : " + commentCreationDTO.getPostId()));
-
-        if( authUser.getUserId().equals( commentCreationDTO.getUserId() ) == false ) {
-            throw new NotFoundException("Auth Error", "" );
-        }
+                .orElseThrow(()->new NotFoundException("게시물을 찾을 수 없습니다.", "postId : " + commentCreationDTO.getPostId()));
 
         if( commentCreationDTO.getParentCommentId() != null ) {
             boolean isChk = commentsJpa.existsByCommentIdAndDeleteStatus(commentCreationDTO.getParentCommentId(), false);
             if( isChk == false ){
-                throw new NotFoundException("Parent Comment not found", "commentId : " + commentCreationDTO.getParentCommentId());
+                throw new NotFoundException("부모 댓글을 찾을 수 없습니다.", "commentId : " + commentCreationDTO.getParentCommentId());
             }
         }
 
@@ -97,14 +107,14 @@ public class Comment2Service {
         }
 
         UserEntity authUser = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(() -> new NotFoundException("User not found", ""));
+                .orElseThrow(() -> new NotFoundException("유저정보를 찾을 수 없습니다.", ""));
 
         Posts post = postsJpa.findById(commentModifyDTO.getPostId())
-                .orElseThrow(() -> new NotFoundException("Post not found", "postId : " + commentModifyDTO.getPostId()));
+                .orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다.", "postId : " + commentModifyDTO.getPostId()));
 
         Comments comment = commentsJpa.findByCommentIdAndDeleteStatus(commentModifyDTO.getCommentId(), false);
         if (comment == null) {
-            throw new NotFoundException("Comment not found", commentModifyDTO.getCommentId());
+            throw new NotFoundException("댓글을 찾을 수 없습니다.", commentModifyDTO.getCommentId());
         }
 
         comment.setCommentId(commentModifyDTO.getCommentId());
@@ -114,7 +124,7 @@ public class Comment2Service {
         comment.setUpdateAt(LocalDateTime.now());
         commentsJpa.save(comment);
 
-        return new ResponseDto(200, "댓글 수정 완료,", "commentId : " + comment.getCommentId());
+        return new ResponseDto(200, "댓글 수정 완료", "commentId : " + comment.getCommentId());
     }
 
 
@@ -124,15 +134,15 @@ public class Comment2Service {
         }
 
         UserEntity authUser = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(()->new NotFoundException("User not found", ""));
+                .orElseThrow(()->new NotFoundException("유저정보를 찾을 수 없습니다.", ""));
 
         Comments comment = commentsJpa.findByCommentIdAndDeleteStatus(commentId, false);
         if( comment == null ){
-            throw new NotFoundException("Comment not found", "commentId : " + commentId);
+            throw new NotFoundException("이미 삭제된 댓글입니다.", "commentId : " + commentId);
         }
 
         if( comment.getDeleteStatus() ) {
-            throw new BadRequestException("Already NotFound Comment", "commentId : " + commentId);
+            throw new NotFoundException("이미 삭제된 댓글입니다.", "commentId : " + commentId);
         }
 
         comment.setDeleteStatus(true);
@@ -148,14 +158,14 @@ public class Comment2Service {
         }
 
         UserEntity authUser = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(()->new NotFoundException("User not found", ""));
+                .orElseThrow(()->new NotFoundException("유저정보를 찾을 수 없습니다.", ""));
         Comments comment = commentsJpa.findByCommentIdAndDeleteStatus(commentId, false);
         if( comment == null ){
-            throw new NotFoundException("Comment not found", "commentId : " + commentId);
+            throw new NotFoundException("댓글을 찾을 수 없습니다.", "commentId : " + commentId);
         }
 
         if( comment.getDeleteStatus() ) {
-            throw new BadRequestException("Already NotFound Comment", "commentId : " + commentId);
+            throw new NotFoundException("이미 삭제된 댓글입니다.", "commentId : " + commentId);
         }
 
         CommentFavorite commentFavorite = commentFavoriteJpa.findByUserEntityAndComments(authUser,comment);
@@ -164,10 +174,10 @@ public class Comment2Service {
             newCommentFavorite.setComments(comment);
             newCommentFavorite.setUserEntity(authUser);
             commentFavoriteJpa.save(newCommentFavorite);
-            return new ResponseDto(200, "댓글 좋아요 완료 ", "commentId : " + commentId );
+            return new ResponseDto(200, "댓글 좋아요 완료", "commentId : " + commentId );
         } else {
             commentFavoriteJpa.deleteById(commentFavorite.getCommentFavoriteId());
-            return new ResponseDto(200, "댓글 좋아요 취소 완료 ", "commentId : " + commentId );
+            return new ResponseDto(200, "댓글 좋아요 취소 완료", "commentId : " + commentId );
         }
     }
 }
