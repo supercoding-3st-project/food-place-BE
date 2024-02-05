@@ -5,6 +5,8 @@ import com.github.foodplacebe.repository.userRoles.Roles;
 import com.github.foodplacebe.repository.userRoles.RolesJpa;
 import com.github.foodplacebe.repository.userRoles.UserRoles;
 import com.github.foodplacebe.repository.userRoles.UserRolesJpa;
+import com.github.foodplacebe.repository.users.BlacklistedToken;
+import com.github.foodplacebe.repository.users.BlacklistedTokenJpa;
 import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
 import com.github.foodplacebe.service.exceptions.*;
@@ -30,9 +32,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -162,7 +162,7 @@ public class SignUpLoginService {
             ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.", signUpResponse);
 
 
-            return Arrays.asList(jwtTokenConfig.createToken(requestEmail, roles), responseDto);
+            return Arrays.asList(jwtTokenConfig.createToken(requestEmail), responseDto);
 //        }catch (InternalAuthenticationServiceException e){
 //            throw new NotFoundException(String.format("해당 이메일 또는 핸드폰번호 \"%s\"의 계정을 찾을 수 없습니다.", emailOrPhoneNumber));
         }
@@ -210,5 +210,23 @@ public class SignUpLoginService {
         if(LocalDate.parse(birth,formatter).equals(userEntity.getDateOfBirth())){
             return new ResponseDto(HttpStatus.OK.value(), "생년월일 인증에 성공 하였습니다.", userEntity.getEmail());
         }else throw new AccessDenied("인증에 실패 하였습니다.",birth);
+    }
+
+    public ResponseDto logoutExpireToken(String token) {
+        //필터에서 걸러지고 오기때문에 아래 if 문은 발생될일이 없음
+        if(token==null|| jwtTokenConfig.isTokenBlacklisted(token)||!jwtTokenConfig.validateToken(token))
+            throw new BadRequestException("로그인 된 정보 없음", "요청 토큰 값 : "+token);
+
+        BlacklistedToken blacklistedToken = jwtTokenConfig.addBlacklist(token);
+        long remaining = blacklistedToken.getExpirationTime().getTime() - new Date().getTime();
+        long minutes = remaining/(60*1000);
+        long seconds = (remaining/1000) % 60;
+
+        Map<String, String> response = new LinkedHashMap<>();
+        response.put("만료 처리된 토큰", blacklistedToken.getToken());
+        response.put("토큰의 만료시간", minutes+"분 "+seconds+"초 남아 있었음");
+
+        return new ResponseDto(HttpStatus.OK.value(),
+                "로그아웃 처리 완료 (토큰 만료 처리)", response);
     }
 }

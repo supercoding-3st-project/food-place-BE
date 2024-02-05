@@ -1,10 +1,13 @@
 package com.github.foodplacebe.config.security;
 
+import com.github.foodplacebe.repository.users.BlacklistedToken;
+import com.github.foodplacebe.repository.users.BlacklistedTokenJpa;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,9 +20,11 @@ import java.util.Date;
 import java.util.List;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class JwtTokenConfig {
     private final UserDetailsService userDetailsService;
+    private final BlacklistedTokenJpa blacklistedTokenJpa;
 
     @Value("${jwtpassword.source}")
     private String keySource;
@@ -30,7 +35,6 @@ public class JwtTokenConfig {
                 .encodeToString(keySource.getBytes());
     }
 
-    private long tokenExpiry = 1000L * 60 *60;
 
     public boolean validateToken(String token){
         try{//.ExpiredJwtException 토큰검증실패시 발생 따로 커스텀익셉션 설정안함.
@@ -39,9 +43,22 @@ public class JwtTokenConfig {
                     .getBody();
             return claims.getExpiration().after(new Date());
         }catch (Exception e){
-            e.printStackTrace();
+            log.warn(e.getMessage());
             return false;
         }
+    }
+    public boolean isTokenBlacklisted(String jwtToken) {
+        if(blacklistedTokenJpa.existsById(jwtToken)){
+            log.warn("로그아웃 처리된 토큰");
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public BlacklistedToken addBlacklist(String token) {
+        return blacklistedTokenJpa.save(new BlacklistedToken(token,
+                Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getExpiration()));
     }
 
     public Authentication getAuthentication(String jwtToken) {
@@ -50,18 +67,14 @@ public class JwtTokenConfig {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public String createToken(String email, List<String> roles) {
+    public String createToken(String email) {
         Date now = new Date();
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setIssuedAt(now)
                 .setSubject(email)
-                .claim("roles",roles)
-                .setExpiration(new Date(now.getTime()+tokenExpiry))
+                .setExpiration(new Date(now.getTime()+1000L * 60 *60))
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
-        return token;
     }
-
-
 
 }

@@ -94,7 +94,7 @@ public class SocialSignUpService {
         ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.", signUpResponse);
 
 
-        return Arrays.asList(jwtTokenConfig.createToken(userEntity.getEmail(), roles), responseDto);
+        return Arrays.asList(jwtTokenConfig.createToken(userEntity.getEmail()), responseDto);
     }
 
     public ResponseEntity<ResponseDto> connectAccount(boolean isConnect, Long socialId) {
