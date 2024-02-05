@@ -16,4 +16,5 @@ public class UpdateMyInfoRequest {
     private String neighborhood;
     private String gender;
     private String dateOfBirth;
+    private String password;
 }
