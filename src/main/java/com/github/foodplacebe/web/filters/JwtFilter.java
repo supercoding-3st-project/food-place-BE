@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -19,11 +20,12 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwtToken = request.getHeader("Token");
-        System.out.println("gk");
-        if(jwtToken!=null&&jwtTokenConfig.validateToken(jwtToken)&&!jwtTokenConfig.isTokenBlacklisted(jwtToken)){
+        System.out.println("Entering JwtFilter");
+        if(jwtToken != null && jwtTokenConfig.validateToken(jwtToken) && !jwtTokenConfig.isTokenBlacklisted(jwtToken)) {
             Authentication authentication = jwtTokenConfig.getAuthentication(jwtToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+        System.out.println("Exiting JwtFilter");
         filterChain.doFilter(request, response);
     }
 }

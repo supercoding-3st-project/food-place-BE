@@ -64,8 +64,8 @@ public class SecurityConfig {
                     l.logoutRequestMatcher(new AntPathRequestMatcher("/api/account/logout"));
                     l.logoutSuccessUrl("/api/account/login");
                     l.invalidateHttpSession(true);
-                });
-//                .addFilterBefore(new JwtFilter(jwtTokenConfig), UsernamePasswordAuthenticationFilter.class);
+                })
+                .addFilterBefore(new JwtFilter(jwtTokenConfig), UsernamePasswordAuthenticationFilter.class);
     return http.build();
     }
 

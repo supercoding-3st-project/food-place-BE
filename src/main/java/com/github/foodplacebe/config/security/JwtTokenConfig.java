@@ -48,8 +48,7 @@ public class JwtTokenConfig {
         }
     }
     public boolean isTokenBlacklisted(String jwtToken) {
-        boolean blackListToken = blacklistedTokenJpa.existsById(jwtToken);
-        if(blackListToken){
+        if(blacklistedTokenJpa.existsById(jwtToken)){
             log.warn("로그아웃 처리된 토큰");
             return true;
         }else {
@@ -68,12 +67,11 @@ public class JwtTokenConfig {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public String createToken(String email, List<String> roles) {
+    public String createToken(String email) {
         Date now = new Date();
         return Jwts.builder()
                 .setIssuedAt(now)
                 .setSubject(email)
-                .claim("roles",roles)
                 .setExpiration(new Date(now.getTime()+1000L * 60 *60))
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();

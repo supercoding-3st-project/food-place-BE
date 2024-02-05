@@ -162,7 +162,7 @@ public class SignUpLoginService {
             ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.", signUpResponse);
 
 
-            return Arrays.asList(jwtTokenConfig.createToken(requestEmail, roles), responseDto);
+            return Arrays.asList(jwtTokenConfig.createToken(requestEmail), responseDto);
 //        }catch (InternalAuthenticationServiceException e){
 //            throw new NotFoundException(String.format("해당 이메일 또는 핸드폰번호 \"%s\"의 계정을 찾을 수 없습니다.", emailOrPhoneNumber));
         }
