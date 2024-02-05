@@ -65,6 +65,22 @@ public class PostPhotosService {
         return filenameList;
     }
 
+    public String uploadProfileImg (String name, MultipartFile multipartFile) {
+        String uploadedUrl;
+        if (!multipartFile.isEmpty()){
+            try {
+                String fileName = buildFileName(name, multipartFile.getOriginalFilename(), 1);
+                uploadedUrl = uploadImage(multipartFile, fileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("img upload failed");
+            }
+        }else {
+            uploadedUrl = "http://k.kakaocdn.net/dn/1G9kp/btsAot8liOn/8CWudi3uy07rvFNUkk3ER0/img_640x640.jpg";
+        }
+        return uploadedUrl;
+    }
+
     public String uploadImage(MultipartFile multipartFile, String fileName) throws FileUploadFailedException{
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());
