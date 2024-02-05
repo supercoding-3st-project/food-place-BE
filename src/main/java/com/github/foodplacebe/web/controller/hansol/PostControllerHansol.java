@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PostControllerHansol {
     private final PostServiceHansol postServiceHansol;
-
     @PostMapping("/post-register")  // 맛집 게시글 등록
     public ResponseDto postRegister(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody PostRegisterRequest postRegisterRequest) {
         return postServiceHansol.postRegister(customUserDetails, postRegisterRequest);

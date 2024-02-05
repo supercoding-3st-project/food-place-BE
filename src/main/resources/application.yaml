@@ -23,6 +23,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
 cloud:
   aws:
     s3:

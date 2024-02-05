@@ -21,18 +21,20 @@ public class Comment2Controller {
 
     @GetMapping("/post")
     public ResponseDto getCommentByPostId(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam Integer postId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return commentService.getCommentsByPostId(postId, PageRequest.of(page,size));
+        return commentService.getCommentsByPostId(customUserDetails, postId, PageRequest.of(page,size));
     }
 
     @GetMapping("/comment")
     public ResponseDto getCommentByCommentId(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam Integer commentId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return commentService.getCommentsByCommentId(commentId, PageRequest.of(page,size));
+        return commentService.getCommentsByCommentId(customUserDetails, commentId, PageRequest.of(page,size));
     }
 
     @PostMapping("/add")
