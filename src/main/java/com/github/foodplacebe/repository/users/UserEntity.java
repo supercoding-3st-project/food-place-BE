@@ -4,9 +4,7 @@ import com.github.foodplacebe.repository.postFavorite.PostFavorite;
 import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.repository.userRoles.UserRoles;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +15,9 @@ import java.util.Collection;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "userId")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

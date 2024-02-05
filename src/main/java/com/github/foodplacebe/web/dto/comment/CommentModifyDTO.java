@@ -13,7 +13,6 @@ import lombok.Setter;
 public class CommentModifyDTO {
     private Integer commentId;
     private Integer postId;
-    private Integer userId;
     private Integer parentCommentId;
     private String content;
 }

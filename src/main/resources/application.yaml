@@ -36,3 +36,5 @@ cloud:
       auto: false
     stack:
       auto: false
+
+#  {bucket}{access-key}{secret-key}
