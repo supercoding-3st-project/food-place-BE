@@ -14,4 +14,6 @@ public interface CommentFavoriteJpa extends JpaRepository<CommentFavorite, Integ
 
     int countByCommentsCommentId(Integer commentId);
     void deleteById(Integer commentFavoritedId);
+
+    boolean existsByUserEntityUserIdAndCommentsCommentId(Integer userId, Integer commentId);
 }

@@ -12,6 +12,7 @@ import com.github.foodplacebe.service.exceptions.BadRequestException;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
 import com.github.foodplacebe.web.dto.comment.CommentCreationDTO;
 import com.github.foodplacebe.web.dto.comment.CommentModifyDTO;
+import com.github.foodplacebe.web.dto.comment.CommentResponse_AuthDTO;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.reactor.ReactorEnvironmentPostProcessor;
@@ -33,28 +34,49 @@ public class Comment2Service {
     private final UserJpa userJpa;
     private final PostsJpa postsJpa;
 
-    public ResponseDto getCommentsByPostId(Integer postId, Pageable pageable){
+    public ResponseDto getCommentsByPostId(CustomUserDetails customUserDetails, Integer postId, Pageable pageable){
+        if( customUserDetails != null ){
+            Integer userId = customUserDetails.getUserId();
+            Page<CommentResponse_AuthDTO> response = commentsJpa.findByPostsPostIdAndParentCommentId(postId, 0, pageable)
+                    .map(comment -> convertToCommentResponse_AuthDTO(comment, userId));
 
-        Page<CommentResponseDTO> response = commentsJpa.findByPostsPostIdAndParentCommentId(postId, 0, pageable)
-                .map(this::convertToCommentResponseDTO);
-
-        if( response.getTotalElements() == 0 ){
-            return new ResponseDto(404, "NOT_FOUND", "해당 게시글에 댓글이 없습니다.");
+            if (response.getTotalElements() == 0) {
+                return new ResponseDto(404, "NOT_FOUND", "해당 게시글에 댓글이 없습니다.");
+            }
+            return new ResponseDto(200, "댓글 조회(게시물) 완료", response );
         }
+        else {
+            Page<CommentResponseDTO> response = commentsJpa.findByPostsPostIdAndParentCommentId(postId, 0, pageable)
+                    .map(this::convertToCommentResponseDTO);
 
-        return new ResponseDto(200, "댓글 조회(게시물) 완료", response );
+            if (response.getTotalElements() == 0) {
+                return new ResponseDto(404, "NOT_FOUND", "해당 게시글에 댓글이 없습니다.");
+            }
+            return new ResponseDto(200, "댓글 조회(게시물) 완료", response );
+        }
     }
 
 
-    public ResponseDto getCommentsByCommentId(Integer commentId, Pageable pageable){
-        Page<CommentResponseDTO> response = commentsJpa.findByParentCommentId(commentId, pageable)
-                .map(this::convertToCommentResponseDTO);
 
-        if( response.getTotalElements() == 0 ){
-            return new ResponseDto(404, "NOT_FOUND", "해당 댓글에 댓글이 없습니다.");
+    public ResponseDto getCommentsByCommentId(CustomUserDetails customUserDetails, Integer commentId, Pageable pageable){
+        if( customUserDetails != null ){
+            Integer userId = customUserDetails.getUserId();
+            Page<CommentResponse_AuthDTO> response = commentsJpa.findByParentCommentId(commentId, pageable)
+                    .map(comment -> convertToCommentResponse_AuthDTO(comment, userId));
+
+            if (response.getTotalElements() == 0) {
+                return new ResponseDto(404, "NOT_FOUND", "해당 댓글에 댓글이 없습니다.");
+            }
+            return new ResponseDto(200, "댓글 조회(댓글) 완료", response);
+        } else {
+            Page<CommentResponseDTO> response = commentsJpa.findByParentCommentId(commentId, pageable)
+                    .map(this::convertToCommentResponseDTO);
+
+            if (response.getTotalElements() == 0) {
+                return new ResponseDto(404, "NOT_FOUND", "해당 댓글에 댓글이 없습니다.");
+            }
+            return new ResponseDto(200, "댓글 조회(댓글) 완료", response);
         }
-
-        return new ResponseDto(200, "댓글 조회(댓글) 완료", response );
     }
 
     private CommentResponseDTO convertToCommentResponseDTO(Comments comment){
@@ -70,6 +92,23 @@ public class Comment2Service {
                 profileImg,
                 comment.getCreateAt(),
                 comment.getUpdateAt()
+        );
+    }
+
+
+    private CommentResponse_AuthDTO convertToCommentResponse_AuthDTO(Comments comment, Integer userId) {
+        int likeCount = commentFavoriteJpa.countByCommentsCommentId(comment.getCommentId());
+        boolean isLiked = commentFavoriteJpa.existsByUserEntityUserIdAndCommentsCommentId(userId, comment.getCommentId());
+        return new CommentResponse_AuthDTO(
+                comment.getPosts().getPostId(),
+                comment.getUserEntity().getUserId(),
+                comment.getCommentId(),
+                comment.getParentCommentId(),
+                comment.getContent(),
+                likeCount,
+                comment.getCreateAt(),
+                comment.getUpdateAt(),
+                isLiked
         );
     }
 
