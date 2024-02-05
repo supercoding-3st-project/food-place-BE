@@ -212,7 +212,6 @@ public class SignUpLoginService {
         }else throw new AccessDenied("인증에 실패 하였습니다.",birth);
     }
 
-    @Transactional(transactionManager = "tm")
     public ResponseDto logoutExpireToken(String token) {
         //필터에서 걸러지고 오기때문에 아래 if 문은 발생될일이 없음
         if(token==null|| jwtTokenConfig.isTokenBlacklisted(token)||!jwtTokenConfig.validateToken(token))
