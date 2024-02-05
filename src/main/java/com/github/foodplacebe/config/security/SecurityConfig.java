@@ -50,7 +50,10 @@ public class SecurityConfig {
                 })
                 .authorizeRequests(a ->
                             a
+                                    .requestMatchers("/auth/test9").hasRole("ADMIN")
+                                    .requestMatchers("/auth/logout").hasAnyRole("USER","ADMIN")
                                     .requestMatchers("/resources/static/**","/v1/api/test", "/auth/*","/").permitAll()
+
 
                 )
                 .logout(l->{

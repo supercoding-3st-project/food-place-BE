@@ -1,5 +1,6 @@
 package com.github.foodplacebe.web.filters;
 import com.github.foodplacebe.config.security.JwtTokenConfig;
+import com.github.foodplacebe.service.authAccount.SignUpLoginService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwtToken = request.getHeader("Token");
 
-        if(jwtToken!=null&&jwtTokenConfig.validateToken(jwtToken)){
+        if(jwtToken!=null&&jwtTokenConfig.validateToken(jwtToken)&&!jwtTokenConfig.isTokenBlacklisted(jwtToken)){
             Authentication authentication = jwtTokenConfig.getAuthentication(jwtToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
