@@ -12,7 +12,10 @@ import com.github.foodplacebe.service.exceptions.BadRequestException;
 import com.github.foodplacebe.service.exceptions.NotFoundException;
 import com.github.foodplacebe.service.hansolService.hansolMappers.PostMapper;
 import com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse;
+import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,43 +37,44 @@ public class InquiryService {
 //    }
 
     @Transactional(transactionManager = "tm")
-    public List<FindPostsResponse> getFavoritePostsByUserId(CustomUserDetails customUserDetails) {
-        UserEntity userEntity = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(()-> new NotFoundException("유저정보를 찾을 수 없습니다.", customUserDetails.getUserId()));
-        List<PostFavorite> postFavorites = postFavoriteJpa.findByUserEntity(userEntity);
-        if (postFavorites.isEmpty()) {
-            throw new NotFoundException("즐겨찾기된 맛집이 없습니다.", customUserDetails.getUserId());
+    public ResponseDto getFavoritePostsByUserId(CustomUserDetails customUserDetails, Pageable pageable) {
+        try {
+            UserEntity userEntity = userJpa.findById(customUserDetails.getUserId())
+                    .orElseThrow(()-> new NotFoundException("유저정보를 찾을 수 없습니다.", customUserDetails.getUserId()));
+            Page<PostFavorite> postFavorites = postFavoriteJpa.findByUserEntity(userEntity, pageable);
+            Page<FindPostsResponse> responses = postFavorites.map(postFavorite -> PostMapper.INSTANCE.postToFindPostsResponse(postFavorite.getPosts()));
+            if (postFavorites.isEmpty()) {
+//            throw new NotFoundException("즐겨찾기된 맛집이 없습니다.", customUserDetails.getUserId());
+                return new ResponseDto(404, "즐겨찾기된 맛집이 없습니다.");
+            }
+            return new ResponseDto(200, "즐겨찾기된 맛집 조회 성공", responses);
+        } catch (NotFoundException e) {
+            return new ResponseDto(404, e.getMessage());
+        } catch (Exception e) {
+            return new ResponseDto(500, "서버 오류: " + e.getMessage());
         }
-
-        return postFavorites.stream()
-                .map(postFavorite -> PostMapper.INSTANCE.postToFindPostsResponse(postFavorite.getPosts()))
-                .collect(Collectors.toList());
     }
 
     @Transactional(transactionManager = "tm")
-    public List<FindPostsResponse> findRestaurantsByUserNeighborhood(CustomUserDetails customUserDetails) {
-        UserEntity userEntity = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(()-> new NotFoundException("유저정보를 찾을 수 없습니다.", customUserDetails.getUserId()));
-
-        String userEntityNeighborhood = userEntity.getNeighborhood();
-        String[] userNeighborhoodParts = userEntityNeighborhood.split(" ");
-        String userCity = userNeighborhoodParts[0];
-
-        // 해당 도시의 맛집을 조회
-        List<Posts> restaurants;
+    public ResponseDto findRestaurantsByUserNeighborhood(CustomUserDetails customUserDetails, Pageable pageable) {
         try {
-            restaurants = postsJpa.findRestaurantsByCity(userCity);
-        } catch (Exception ex) {
-            throw new BadRequestException("맛집 조회에 실패했습니다.", ex);
-        }
+            UserEntity userEntity = userJpa.findById(customUserDetails.getUserId())
+                    .orElseThrow(() -> new NotFoundException("유저정보를 찾을 수 없습니다.", customUserDetails.getUserId()));
+            String userEntityNeighborhood = userEntity.getNeighborhood();
+            String[] userNeighborhoodParts = userEntityNeighborhood.split(" ");
+            String userCity = userNeighborhoodParts[0];
 
-        if (restaurants.isEmpty()) {
-            throw new BadRequestException("해당 도시에 맛집이 존재하지 않습니다.", userCity);
+            Page<Posts> restaurants = postsJpa.findRestaurantsByCity(userCity, pageable);
+            Page<FindPostsResponse> responses = restaurants.map(PostMapper.INSTANCE::postToFindPostsResponse);
+            if (restaurants.isEmpty()) {
+                return new ResponseDto(404, "해당 도시에 맛집이 존재하지 않습니다.");
+            }
+            return new ResponseDto(200, "맛집 조회 성공", responses);
+        } catch (NotFoundException e) {
+            return new ResponseDto(404, e.getMessage());
+        } catch (Exception e) {
+            return new ResponseDto(500, "서버 오류: " + e.getMessage());
         }
-
-        // 맛집 정보를 FindPostsResponse로 매핑하여 반환
-        return restaurants.stream()
-                .map(PostMapper.INSTANCE::postToFindPostsResponse)
-                .collect(Collectors.toList());
     }
+
 }

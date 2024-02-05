@@ -49,7 +49,7 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
     Page<FindPostsResponse> findTopByOrderByViewCountDesc(int count, Pageable pageable);
 
     @Query("SELECT p FROM Posts p WHERE p.address LIKE CONCAT('%', :city, '%')")
-    List<Posts> findRestaurantsByCity(@Param("city") String city);
+    Page<Posts> findRestaurantsByCity(@Param("city") String city, Pageable pageable);
 
 
 }

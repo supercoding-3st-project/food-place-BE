@@ -5,6 +5,7 @@ import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
 import com.github.foodplacebe.service.InquiryService;
 import com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse;
+import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,16 +34,16 @@ public class InquiryController {
 //    }
 
     @GetMapping("/liked")
-    public List<FindPostsResponse> getLikedPosts(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        List<FindPostsResponse> likedPosts = inquiryService.getFavoritePostsByUserId(customUserDetails);
+    public ResponseDto getLikedPosts(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                     Pageable pageable) {
+        ResponseDto likedPosts = inquiryService.getFavoritePostsByUserId(customUserDetails, pageable);
         return likedPosts;
     }
 
     @GetMapping("/neighborhood")
-    public List<FindPostsResponse> findRestaurants(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
-    ) {
-        List<FindPostsResponse> restaurants = inquiryService.findRestaurantsByUserNeighborhood(customUserDetails);
+    public ResponseDto findRestaurants(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                   Pageable pageable) {
+        ResponseDto restaurants = inquiryService.findRestaurantsByUserNeighborhood(customUserDetails, pageable);
         return restaurants;
     }
 

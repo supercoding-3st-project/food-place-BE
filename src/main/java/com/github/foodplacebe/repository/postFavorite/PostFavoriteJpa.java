@@ -2,6 +2,8 @@ package com.github.foodplacebe.repository.postFavorite;
 
 import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.repository.users.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +17,5 @@ public interface PostFavoriteJpa extends JpaRepository<PostFavorite, Integer> {
 
     void deleteByUserEntityAndPosts(UserEntity userEntity, Posts Posts);
 
-    List<PostFavorite> findByUserEntity(UserEntity userEntity);
+    Page<PostFavorite> findByUserEntity(UserEntity userEntity, Pageable pageable);
 }
