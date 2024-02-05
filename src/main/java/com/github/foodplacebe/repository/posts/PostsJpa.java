@@ -54,7 +54,7 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
 
     @Query("SELECT p FROM Posts p WHERE p.address LIKE CONCAT('%', :city, '%')")
     Page<Posts> findRestaurantsByCity(@Param("city") String city, Pageable pageable);
-    List<Posts> findRestaurantsByCity(@Param("city") String city);
+
   
     Page<Posts> findByAddressContaining(String address, Pageable pageable);
 
