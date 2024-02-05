@@ -1,11 +1,7 @@
 package com.github.foodplacebe.web.controller.hansol;
 
 import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
-<<<<<<<< HEAD:src/main/java/com/github/foodplacebe/web/controller/hansol/PostController1.java
-import com.github.foodplacebe.service.hansolService.PostService1;
-========
 import com.github.foodplacebe.service.hansolService.PostServiceHansol;
->>>>>>>> f8ba89f4966fdd3b425162354c38f73a11ced65f:src/main/java/com/github/foodplacebe/web/controller/hansol/PostControllerHansol.java
 import com.github.foodplacebe.web.dto.hansolDto.PostRegisterRequest;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
