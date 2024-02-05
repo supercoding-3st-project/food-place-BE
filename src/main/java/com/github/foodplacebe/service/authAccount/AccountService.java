@@ -156,7 +156,9 @@ public class AccountService {
         UserEntity user = userJpa.findById(customUserDetails.getUserId())
                 .orElseThrow(() -> new NotFoundException("user 정보를 찾을 수 없습니다", customUserDetails.getUserId()));
 
-        if (!isValidPhoneNumber(updateMyInfoRequest.getPhoneNum())) {
+        if (!(passwordEncoder.matches(updateMyInfoRequest.getPassword(), user.getPassword())))
+            throw new BadRequestException("비밀번호가 일치하지 않습니다.", "");
+        else if (!isValidPhoneNumber(updateMyInfoRequest.getPhoneNum())) {
             throw new BadRequestException("핸드폰 번호를 확인해주세요.", updateMyInfoRequest.getPhoneNum());
         } else if (isValidPhoneNumber(updateMyInfoRequest.getNickName())){
             throw new BadRequestException("핸드폰 번호를 닉네임으로 사용할수 없습니다.",updateMyInfoRequest.getNickName());
@@ -173,7 +175,7 @@ public class AccountService {
 
         userJpa.save(user);
 
-        return new ResponseDto(200, "회원정보 수정 완료", updateMyInfoRequest);
+        return new ResponseDto(200, "회원정보 수정 완료", user.getNickName() + "님의 정보가 수정되었습니다.");
     }
 
 
