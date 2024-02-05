@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class Comment2Controller {
     private final Comment2Service commentService;
 
-    @GetMapping("/post/")
+    @GetMapping("/post")
     public ResponseDto getCommentByPostId(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam Integer postId,
@@ -28,7 +28,7 @@ public class Comment2Controller {
         return commentService.getCommentsByPostId(customUserDetails, postId, PageRequest.of(page,size));
     }
 
-    @GetMapping("/comment/")
+    @GetMapping("/comment")
     public ResponseDto getCommentByCommentId(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam Integer commentId,
