@@ -109,9 +109,9 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
             "SELECT new com.github.foodplacebe.web.dto.hansolDto.FindPostsResponse(" +
                     "p.postId, p.name, p.neighborhood, p.category, p.menu, p.viewCount, p.mainPhoto, p.createAt, SIZE(p.postFavorites)) " +
                     "FROM Posts p " +
-                    "WHERE p.address = ?1 AND p.name = ?2 " +
+                    "WHERE p.address = ?1 AND p.name = ?2 AND p.postId != ?3 " +
                     "GROUP BY p.postId "
     )
-    List<FindPostsResponse> findFiveRelatedPosts(String address, String name);
+    List<FindPostsResponse> findFiveRelatedPosts(String address, String name, Integer postId);
 }
 

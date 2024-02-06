@@ -114,15 +114,15 @@ public class PostsService {
         List<FindPostsResponse> findPostsResponse;
 
         if(order.equals("최신순")) {
-            findPostsResponse = postsJpa.findFiveRelatedPosts(address, name)
+            findPostsResponse = postsJpa.findFiveRelatedPosts(address, name, post.getPostId())
                     .stream().sorted(Comparator.comparing(FindPostsResponse::getCreateAt).reversed()).limit(5)
                     .collect(Collectors.toList());
         } else if (order.equals("인기순")) {
-            findPostsResponse = postsJpa.findFiveRelatedPosts(address, name)
+            findPostsResponse = postsJpa.findFiveRelatedPosts(address, name, post.getPostId())
                     .stream().sorted(Comparator.comparing(FindPostsResponse::getFavoriteCount).reversed()).limit(5)
                     .collect(Collectors.toList());
         }else if(order.equals("조회순")) {
-            findPostsResponse = postsJpa.findFiveRelatedPosts(address, name)
+            findPostsResponse = postsJpa.findFiveRelatedPosts(address, name, post.getPostId())
                     .stream().sorted(Comparator.comparing(FindPostsResponse::getViewCount).reversed()).limit(5)
                     .collect(Collectors.toList());
         }else throw new BadRequestException("유효하지 않은 순서입니다.", order);
