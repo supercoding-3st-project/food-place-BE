@@ -25,7 +25,7 @@ public interface UserMapper {
     @Mapping(target = "status", expression = "java(\"normal\")")
     @Mapping(target = "imageUrl", expression = "java(defaultProfileImgSetting())")
     UserEntity signUpRequestToUserEntity(SignUpRequest signUpRequest);
-    @Mapping(target = "joinDate", expression = "java(formatting(userEntity.getJoinDate()))")
+
     SignUpResponse userEntityToSignUpResponse(UserEntity userEntity);
 
     AccountDto userEntityToAccountDTO(UserEntity userEntity);
