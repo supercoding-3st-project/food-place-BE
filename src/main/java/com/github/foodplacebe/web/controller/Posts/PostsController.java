@@ -36,4 +36,13 @@ public class PostsController {
                                    @PathVariable Integer postId){
         return postsService.postsDelete(postId,customUserDetails);
     }
+
+    @GetMapping("/post-relation/{post-id}")
+    public ResponseDto postRelated(
+            @PathVariable("post-id") Integer postId,
+            @RequestParam("order") String order
+    ) {
+        return postsService.findRelatedPosts(postId, order);
+
+    }
 }

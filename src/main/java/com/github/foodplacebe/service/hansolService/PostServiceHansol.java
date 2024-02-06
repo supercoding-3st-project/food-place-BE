@@ -15,9 +15,7 @@ import com.github.foodplacebe.web.dto.hansolDto.PostRegisterRequest;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class PostServiceHansol {
     private final PostsJpa postsJpa;
     private final PostPhotosJpa postPhotosJpa;
     private final UserJpa userJpa;
@@ -107,4 +105,9 @@ public class PostService {
         return new ResponseDto(200, "맛집 게시물 조회 성공", findPostsResponse);
     }
 
+    public ResponseDto searchPosts(String keyword, Pageable pageable) { // 게시물 이름(name), 메뉴(menu), 주소(address)로 검색
+        Page<FindPostsResponse> findPostsResponses = postsJpa.findPostsByKeywordByFavoriteCount(keyword, pageable);
+
+        return new ResponseDto(200, "키워드 검색 성공/ KEYWORD: " + keyword, findPostsResponses);
+    }
 }

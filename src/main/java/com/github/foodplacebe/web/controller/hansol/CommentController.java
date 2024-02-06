@@ -46,7 +46,7 @@ public class CommentController {
         return commentService.commentDelete(customUserDetails, commentId);
     }
 
-    @PostMapping("/comment-favorite/{commentId}")
+    @PostMapping("/comment-favorite/{commentId}") // 댓글 좋아요 등록
     public ResponseDto commentFavorite(@AuthenticationPrincipal CustomUserDetails customUserDetails, @PathVariable("commentId") Integer commentId) {
         return commentService.commentFavorite(customUserDetails, commentId);
     }

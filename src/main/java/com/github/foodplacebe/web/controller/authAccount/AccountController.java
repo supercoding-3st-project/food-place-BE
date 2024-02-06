@@ -4,10 +4,16 @@ import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
 import com.github.foodplacebe.service.authAccount.AccountService;
 import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.AccountPatchDto;
+import com.github.foodplacebe.web.dto.account.UpdateMyInfoRequest;
+import com.github.foodplacebe.web.dto.account.UpdatePasswordRequest;
+import com.github.foodplacebe.web.dto.postDto.PostRequest;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/account")
@@ -31,9 +37,27 @@ public class AccountController {
 //                httpServletRequest.getParameter("quantity"),
 //                customUserDetails);
 //    }
-    @PostMapping("/withdrawal")
-    public String withdrawal(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+    @DeleteMapping("/withdrawal")
+    public ResponseDto withdrawal(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         return accountService.withdrawal(customUserDetails);
+    }
+
+    @GetMapping("/my-info")
+    public ResponseDto getAccountInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+        return accountService.getAccountInfo(customUserDetails);
+    }
+
+    @PutMapping("/update-my-info")
+    public ResponseDto updateMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                    @RequestPart(value = "updateMyInfoRequest") UpdateMyInfoRequest updateMyInfoRequest,
+                                    @RequestPart(value = "image") MultipartFile multipartFiles) {
+        return accountService.updateMyInfo(customUserDetails, updateMyInfoRequest, multipartFiles);
+    }
+
+    @PutMapping("/update-password")
+    public ResponseDto updatePassword(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        return accountService.updatePassword(customUserDetails, updatePasswordRequest);
     }
 
 }

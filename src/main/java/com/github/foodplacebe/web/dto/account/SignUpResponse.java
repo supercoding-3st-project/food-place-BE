@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class SignUpResponse {
+    private Integer userId;
     private String nickName;
-    private String joinDate;
 }
