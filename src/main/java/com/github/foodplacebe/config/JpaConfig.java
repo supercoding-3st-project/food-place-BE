@@ -64,7 +64,7 @@ public class JpaConfig {
         lemfb.setJpaVendorAdapter(vendorAdapter);
 
         Map<String, Object> properties = new HashMap<>();
-        properties.put("hibernate.dialect", "org.hibernate.dialect.MariaDBDialect");
+//        properties.put("hibernate.dialect", "org.hibernate.dialect.MariaDBDialect");
         properties.put("hibernate.format_sql", "true");
         properties.put("hibernate.use_sql_comment", "true");
 
