@@ -16,5 +16,7 @@ public class SchedulerConfig {
     public void cleanupOldWithdrawnUserAndSetupOldProduct(){
         scheduleService.cleanupOldWithdrawnUser();
         log.info("탈퇴한지 7일 이상된 계정을 삭제 하였습니다.");
+        scheduleService.cleanupBlacklistedToken();
+        log.info("로그아웃처리된 토큰중 만료된 토큰값들을 삭제 하였습니다.");
     }
 }

@@ -12,7 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CommentCreationDTO {
     private Integer postId;
-    private Integer userId;
     private Integer parentCommentId;
     private String content;
 }

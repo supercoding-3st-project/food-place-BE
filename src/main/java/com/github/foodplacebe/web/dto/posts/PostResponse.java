@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostResponse {
@@ -19,4 +18,6 @@ public class PostResponse {
     private String mainPhoto;
     private LocalDateTime createAt;
     private Integer favoriteCount;
+    private Integer userId;
+    private String favoriteYn;
 }

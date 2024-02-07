@@ -19,22 +19,22 @@ import org.springframework.web.bind.annotation.*;
 public class Comment2Controller {
     private final Comment2Service commentService;
 
-    @GetMapping("/post/")
-    public ResponseEntity<Page<CommentResponseDTO>> getCommentByPostId(
+    @GetMapping("/post")
+    public ResponseDto getCommentByPostId(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam Integer postId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<CommentResponseDTO> comments = commentService.getCommentsByPostId(postId, PageRequest.of(page,size));
-        return ResponseEntity.ok(comments);
+        return commentService.getCommentsByPostId(customUserDetails, postId, PageRequest.of(page,size));
     }
 
-    @GetMapping("/comment/")
-    public ResponseEntity<Page<CommentResponseDTO>> getCommentByCommentId(
+    @GetMapping("/comment")
+    public ResponseDto getCommentByCommentId(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam Integer commentId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<CommentResponseDTO> comments = commentService.getCommentsByCommentId(commentId, PageRequest.of(page,size));
-        return ResponseEntity.ok(comments);
+        return commentService.getCommentsByCommentId(customUserDetails, commentId, PageRequest.of(page,size));
     }
 
     @PostMapping("/add")

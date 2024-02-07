@@ -46,18 +46,19 @@ public class SecurityConfig {
                 .exceptionHandling(e->{
                     e.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
                     e.accessDeniedHandler(new CustomAccessDeniedHandler());
-
                 })
                 .authorizeRequests(a ->
                             a
-                                    .requestMatchers("/resources/static/**","/v1/api/test", "/auth/*","/").permitAll()
+                                    .requestMatchers("/auth/test9").hasRole("ADMIN")
+                                    .requestMatchers("/auth/logout","/v1/api/account/my-page","/v1/api/mypost","/account/*",
+                                            "/v1/api/reg-post","/v1/api/modify-post/*","/v1/api/post-like-heart/*",
+                                            "/v1/api/post-heart-status/*","/v1/api/delete-food/*","/v1/api/comment/add","/v1/api/comment/mod",
+                                            "/v1/api/comment/del/*","/v1/api/comment/like/*")
+                                        .hasAnyRole("USER","ADMIN")
+                                    .requestMatchers("/resources/static/**","/v1/api/test", "/auth/**","/").permitAll()
+
 
                 )
-                .logout(l->{
-                    l.logoutRequestMatcher(new AntPathRequestMatcher("/api/account/logout"));
-                    l.logoutSuccessUrl("/api/account/login");
-                    l.invalidateHttpSession(true);
-                })
                 .addFilterBefore(new JwtFilter(jwtTokenConfig), UsernamePasswordAuthenticationFilter.class);
     return http.build();
     }
@@ -75,6 +76,7 @@ public class SecurityConfig {
         corsConfiguration.setAllowedOrigins(List.of("*"));
 //        corsConfiguration.setAllowCredentials(true);
         corsConfiguration.addExposedHeader("Token");
+        corsConfiguration.addExposedHeader("Location");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowedMethods(Arrays.asList("GET","PUT","POST","PATCH","DELETE","OPTIONS"));
         corsConfiguration.setMaxAge(1000L*60*60);

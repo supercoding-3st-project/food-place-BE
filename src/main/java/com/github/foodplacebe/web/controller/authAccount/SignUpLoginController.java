@@ -1,7 +1,7 @@
 package com.github.foodplacebe.web.controller.authAccount;
 
+import com.github.foodplacebe.service.ScheduleService;
 import com.github.foodplacebe.service.authAccount.SignUpLoginService;
-import com.github.foodplacebe.service.exceptions.NotFoundException;
 import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.LoginRequest;
 import com.github.foodplacebe.web.dto.account.SignUpRequest;
@@ -9,6 +9,7 @@ import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SignUpLoginController {
     private final SignUpLoginService signUpLoginService;
+    private final ScheduleService scheduleService;
 
     @GetMapping("/test8")
     public ResponseEntity<ResponseDto> test0(){
@@ -49,10 +51,7 @@ public class SignUpLoginController {
     public ResponseDto signUp(@RequestBody SignUpRequest signUpRequest){
         return signUpLoginService.signUp(signUpRequest);
     }
-    @GetMapping("/sign-up")
-    public String redirectToSignUpPage() {
-        return "redirect:/untitled/Test/signup.html?_ijt=5tikatvivfra30akbkui2id0da&_ij_reload=RELOAD_ON_SAVE";
-    }
+
 
 
 
@@ -75,6 +74,15 @@ public class SignUpLoginController {
         List<Object> tokenAndResponse = signUpLoginService.login(loginRequest);
         httpServletResponse.setHeader("Token", (String) tokenAndResponse.get(0));
         return (ResponseDto) tokenAndResponse.get(1);
+    }
+    @PostMapping("/logout")
+    public ResponseDto logout(@RequestHeader HttpHeaders headers) {
+        return signUpLoginService.logoutExpireToken(headers.getFirst("Token"));
+    }
+    @PostMapping("tete")
+    public String te(){
+        scheduleService.cleanupBlacklistedToken();
+        return "scheduleService.cleanupBlacklistedToken();";
     }
 
     @GetMapping("/login")

@@ -6,13 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @AllArgsConstructor
-public class CommentModifyDTO {
-    private Integer commentId;
+public class CommentResponse_AuthDTO {
     private Integer postId;
+    private Integer userId;
+    private Integer commentId;
     private Integer parentCommentId;
     private String content;
+    private Integer likeCount;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
+    private String profileImg;
+    private Boolean userLike;
 }
