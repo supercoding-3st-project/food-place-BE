@@ -2,7 +2,6 @@ package com.github.foodplacebe.config.security.exception;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.foodplacebe.service.exceptions.NotAcceptableException;
 import com.github.foodplacebe.web.advice.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

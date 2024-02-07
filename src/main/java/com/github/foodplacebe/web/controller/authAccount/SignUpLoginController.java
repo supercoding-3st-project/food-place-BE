@@ -88,11 +88,15 @@ public class SignUpLoginController {
         return "scheduleService.cleanupBlacklistedToken();";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/clean-test")
     public ZonedDateTime logoutDirection(){
         scheduleService.cleanupBlacklistedToken();
         return ZonedDateTime.now(ZoneId.systemDefault());
-    }//임시 필요없음
+    }
+    @GetMapping("/response-test")
+    public ResponseEntity<String> responseTest(){
+        return new ResponseEntity<>("QNdn,",HttpStatus.OK);
+    }
 
 
 }

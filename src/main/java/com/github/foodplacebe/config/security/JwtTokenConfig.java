@@ -41,7 +41,7 @@ public class JwtTokenConfig {
 
 
     public boolean validateToken(String token){
-        try{//.ExpiredJwtException 토큰검증실패시 발생 따로 커스텀익셉션 설정안함.
+        try{//.ExpiredJwtException 토큰검증실패시 캐치문으로 넘어감.
             Claims claims = Jwts.parser()
                     .setSigningKey(key).parseClaimsJws(token)
                     .getBody();
