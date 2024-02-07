@@ -21,5 +21,6 @@ public class CommentResponse_AuthDTO {
     private Integer likeCount;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+    private String profileImg;
     private Boolean userLike;
 }

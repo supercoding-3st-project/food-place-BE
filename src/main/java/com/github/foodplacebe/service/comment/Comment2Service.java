@@ -99,6 +99,7 @@ public class Comment2Service {
     private CommentResponse_AuthDTO convertToCommentResponse_AuthDTO(Comments comment, Integer userId) {
         int likeCount = commentFavoriteJpa.countByCommentsCommentId(comment.getCommentId());
         boolean isLiked = commentFavoriteJpa.existsByUserEntityUserIdAndCommentsCommentId(userId, comment.getCommentId());
+        String profileImg = comment.getUserEntity().getImageUrl();
         return new CommentResponse_AuthDTO(
                 comment.getPosts().getPostId(),
                 comment.getUserEntity().getUserId(),
@@ -108,6 +109,7 @@ public class Comment2Service {
                 likeCount,
                 comment.getCreateAt(),
                 comment.getUpdateAt(),
+                profileImg,
                 isLiked
         );
     }
