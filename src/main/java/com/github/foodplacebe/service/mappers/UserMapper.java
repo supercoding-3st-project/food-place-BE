@@ -26,6 +26,7 @@ public interface UserMapper {
     @Mapping(target = "imageUrl", expression = "java(defaultProfileImgSetting())")
     UserEntity signUpRequestToUserEntity(SignUpRequest signUpRequest);
 
+    @Mapping(target = "profileImg", source = "imageUrl")
     SignUpResponse userEntityToSignUpResponse(UserEntity userEntity);
 
     AccountDto userEntityToAccountDTO(UserEntity userEntity);

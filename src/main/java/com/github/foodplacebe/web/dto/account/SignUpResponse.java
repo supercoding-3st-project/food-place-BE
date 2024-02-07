@@ -9,5 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SignUpResponse {
     private Integer userId;
+    private String profileImg;
     private String nickName;
 }
