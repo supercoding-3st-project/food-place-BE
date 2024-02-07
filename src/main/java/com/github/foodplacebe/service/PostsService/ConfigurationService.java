@@ -4,7 +4,6 @@ import com.github.foodplacebe.repository.postPhotos.PostPhotos;
 import com.github.foodplacebe.repository.postPhotos.PostPhotosJpa;
 import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.service.exceptions.BadRequestException;
-import com.github.foodplacebe.web.dto.postDto.PostRequest;
 import com.github.foodplacebe.web.dto.postDto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConfigurationService {
     private final PostPhotosJpa postPhotosJpa;
-    public void checkCategory(PostRequest postRequest){
+    public void checkCategory(String category){
         String[] categoryArray = {"한식", "중식", "일식", "양식", "카페", "베이커리"};
         List<String> categoryList = new ArrayList<>(Arrays.asList(categoryArray));
 
-        if (!categoryList.contains(postRequest.getCategory()) && !postRequest.getCategory().equals("전체"))
-            throw new BadRequestException("유효하지 않은 카테고리입니다.", postRequest.getCategory());
+        if (!categoryList.contains(category) && !category.equals("전체"))
+            throw new BadRequestException("유효하지 않은 카테고리입니다.", category);
     }
 
     public String determineNeighborhood(String address){
@@ -45,6 +44,7 @@ public class ConfigurationService {
         if(!postPhotos.isEmpty()){
             posts.setMainPhoto(postPhotos.get(0).getPhoto());
         }
+
         return new PostResponse(posts, postPhotos);
     }
 }
