@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -218,9 +219,10 @@ public class SignUpLoginService {
             throw new BadRequestException("로그인 된 정보 없음", "요청 토큰 값 : "+token);
 
         BlacklistedToken blacklistedToken = jwtTokenConfig.addBlacklist(token);
-        long remaining = blacklistedToken.getExpirationTime().getTime() - new Date().getTime();
-        long minutes = remaining/(60*1000);
-        long seconds = (remaining/1000) % 60;
+
+        Duration remaining = Duration.between(blacklistedToken.getExpirationTime(), LocalDateTime.now());
+        long minutes = remaining.toMinutes();
+        long seconds = remaining.minusMinutes(minutes).getSeconds();
 
         Map<String, String> response = new LinkedHashMap<>();
         response.put("만료 처리된 토큰", blacklistedToken.getToken());

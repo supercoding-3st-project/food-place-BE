@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -86,8 +89,9 @@ public class SignUpLoginController {
     }
 
     @GetMapping("/login")
-    public String logoutDirection(){
-        return "로그인화면";
+    public ZonedDateTime logoutDirection(){
+        scheduleService.cleanupBlacklistedToken();
+        return ZonedDateTime.now(ZoneId.systemDefault());
     }//임시 필요없음
 
 

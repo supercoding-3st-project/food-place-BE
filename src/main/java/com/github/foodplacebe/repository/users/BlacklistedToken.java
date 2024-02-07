@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -21,5 +21,5 @@ public class BlacklistedToken {
     private String token;
 
     @Column(name = "expiration_time")
-    private Date expirationTime;
+    private LocalDateTime expirationTime;
 }
