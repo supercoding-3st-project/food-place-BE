@@ -46,7 +46,6 @@ public class SecurityConfig {
                 .exceptionHandling(e->{
                     e.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
                     e.accessDeniedHandler(new CustomAccessDeniedHandler());
-
                 })
                 .authorizeRequests(a ->
                             a
@@ -77,6 +76,7 @@ public class SecurityConfig {
         corsConfiguration.setAllowedOrigins(List.of("*"));
 //        corsConfiguration.setAllowCredentials(true);
         corsConfiguration.addExposedHeader("Token");
+        corsConfiguration.addExposedHeader("Location");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowedMethods(Arrays.asList("GET","PUT","POST","PATCH","DELETE","OPTIONS"));
         corsConfiguration.setMaxAge(1000L*60*60);
