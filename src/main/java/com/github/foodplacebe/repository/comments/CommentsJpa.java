@@ -2,6 +2,7 @@ package com.github.foodplacebe.repository.comments;
 
 import com.github.foodplacebe.repository.posts.Posts;
 import com.github.foodplacebe.web.dto.hansolDto.CommentResponse;
+import io.micrometer.observation.ObservationFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Range;
@@ -25,10 +26,11 @@ public interface CommentsJpa extends JpaRepository<Comments, Integer> {
             "ORDER BY c.commentId ASC ")
     Page<CommentResponse> findAllCommentsByCommentId(Integer postId, Integer parentCommentId, Pageable pageable);
 
-    Page<Comments> findByPostsPostIdAndParentCommentId(Integer postId, Integer parentCommentId, Pageable pageable);
-    Page<Comments> findByParentCommentId(Integer parentCommentId, Pageable pageable);
-
     boolean existsByCommentIdAndDeleteStatus(Integer parentCommentId, boolean deleteStatus);
 
-    Comments findByCommentIdAndDeleteStatus(Integer commentId, boolean b);
+    Comments findByCommentIdAndDeleteStatus(Integer commentId, boolean deleteStatus);
+
+    Page<Comments> findByParentCommentIdAndDeleteStatusOrderByCreateAt(Integer commentId, boolean deleteStatus, Pageable pageable);
+
+    Page<Comments> findByPostsPostIdAndParentCommentIdAndDeleteStatusOrderByCreateAt(Integer postId, int i, boolean b, Pageable pageable);
 }
