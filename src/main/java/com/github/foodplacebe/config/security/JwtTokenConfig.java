@@ -15,6 +15,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +41,7 @@ public class JwtTokenConfig {
 
 
     public boolean validateToken(String token){
-        try{//.ExpiredJwtException 토큰검증실패시 발생 따로 커스텀익셉션 설정안함.
+        try{//.ExpiredJwtException 토큰검증실패시 캐치문으로 넘어감.
             Claims claims = Jwts.parser()
                     .setSigningKey(key).parseClaimsJws(token)
                     .getBody();
@@ -57,8 +61,10 @@ public class JwtTokenConfig {
     }
 
     public BlacklistedToken addBlacklist(String token) {
+        Date expiration = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getExpiration();
+        LocalDateTime localDateTime = expiration.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         return blacklistedTokenJpa.save(new BlacklistedToken(token,
-                Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getExpiration()));
+                localDateTime));
     }
 
     public Authentication getAuthentication(String jwtToken) {

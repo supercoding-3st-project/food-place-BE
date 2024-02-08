@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,7 +34,7 @@ public class ScheduleService {
     public void cleanupBlacklistedToken() {
         List<BlacklistedToken> blacklistedTokens = blacklistedTokenJpa.findAll();
         List<BlacklistedToken> expirationTokens = blacklistedTokens.stream()
-                .filter(et->et.getExpirationTime().before(new Date()))
+                .filter(et->et.getExpirationTime().isBefore(LocalDateTime.now()))
                 .toList();
         if(expirationTokens.isEmpty()) return;
         blacklistedTokenJpa.deleteAll(expirationTokens);
