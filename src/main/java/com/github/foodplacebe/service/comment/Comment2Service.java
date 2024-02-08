@@ -37,7 +37,7 @@ public class Comment2Service {
     public ResponseDto getCommentsByPostId(CustomUserDetails customUserDetails, Integer postId, Pageable pageable){
         if( customUserDetails != null ){
             Integer userId = customUserDetails.getUserId();
-            Page<CommentResponse_AuthDTO> response = commentsJpa.findByPostsPostIdAndParentCommentId(postId, 0, pageable)
+            Page<CommentResponse_AuthDTO> response = commentsJpa.findByPostsPostIdAndParentCommentIdAndDeleteStatusOrderByCreateAt(postId, 0, false, pageable)
                     .map(comment -> convertToCommentResponse_AuthDTO(comment, userId));
 
             if (response.getTotalElements() == 0) {
@@ -46,7 +46,7 @@ public class Comment2Service {
             return new ResponseDto(200, "댓글 조회(게시물) 완료", response );
         }
         else {
-            Page<CommentResponseDTO> response = commentsJpa.findByPostsPostIdAndParentCommentId(postId, 0, pageable)
+            Page<CommentResponseDTO> response = commentsJpa.findByPostsPostIdAndParentCommentIdAndDeleteStatusOrderByCreateAt(postId, 0, false, pageable)
                     .map(this::convertToCommentResponseDTO);
 
             if (response.getTotalElements() == 0) {
@@ -61,7 +61,7 @@ public class Comment2Service {
     public ResponseDto getCommentsByCommentId(CustomUserDetails customUserDetails, Integer commentId, Pageable pageable){
         if( customUserDetails != null ){
             Integer userId = customUserDetails.getUserId();
-            Page<CommentResponse_AuthDTO> response = commentsJpa.findByParentCommentId(commentId, pageable)
+            Page<CommentResponse_AuthDTO> response = commentsJpa.findByParentCommentIdAndDeleteStatusOrderByCreateAt(commentId, false, pageable)
                     .map(comment -> convertToCommentResponse_AuthDTO(comment, userId));
 
             if (response.getTotalElements() == 0) {
@@ -69,7 +69,7 @@ public class Comment2Service {
             }
             return new ResponseDto(200, "댓글 조회(댓글) 완료", response);
         } else {
-            Page<CommentResponseDTO> response = commentsJpa.findByParentCommentId(commentId, pageable)
+            Page<CommentResponseDTO> response = commentsJpa.findByParentCommentIdAndDeleteStatusOrderByCreateAt(commentId, false, pageable)
                     .map(this::convertToCommentResponseDTO);
 
             if (response.getTotalElements() == 0) {
