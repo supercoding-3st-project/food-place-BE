@@ -62,13 +62,13 @@ public class Posts {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "view_count", columnDefinition = "DEFAULT 200")
+    @Column(name = "view_count")
     private Integer viewCount;
 
     @Column(name = "main_photo")
     private String mainPhoto;
 
-    @Column(name = "create_at",columnDefinition = "DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "create_at")
     private LocalDateTime createAt;
 
     @Column(name = "update_at")
