@@ -152,7 +152,7 @@ public class AccountService {
 
 
     @Transactional(transactionManager = "tm")
-    public ResponseDto updateMyInfo(UpdateMyInfoRequest updateMyInfoRequest, MultipartFile multipartFile) {
+    public ResponseDto updateMyInfo(UpdateMyInfoRequest updateMyInfoRequest, List<MultipartFile> multipartFiles) {
         UserEntity user = userJpa.findById(1)
                 .orElseThrow(() -> new NotFoundException("user 정보를 찾을 수 없습니다", "1"));
 
@@ -164,7 +164,7 @@ public class AccountService {
             throw new BadRequestException("핸드폰 번호를 닉네임으로 사용할수 없습니다.",updateMyInfoRequest.getNickName());
         }
 
-        String profileImg = postPhotosService.uploadProfileImg(user.getNickName(), multipartFile);
+        String profileImg = postPhotosService.uploadProfileImg(user.getNickName(), multipartFiles.get(0));
 
         user.setImageUrl(profileImg);
         user.setNickName(updateMyInfoRequest.getNickName());

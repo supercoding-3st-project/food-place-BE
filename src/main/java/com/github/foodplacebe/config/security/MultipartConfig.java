@@ -14,7 +14,7 @@ public class MultipartConfig {
 
     private final long maxUploadSize = 1048576;
 
-    private final long maxUploadSizePerFile = 1048576;
+    private final long maxUploadSizePerFile = 10485760;
 
     @Bean
     public MultipartResolver multipartResolver() {
