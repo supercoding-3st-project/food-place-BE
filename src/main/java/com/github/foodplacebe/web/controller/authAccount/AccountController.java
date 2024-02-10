@@ -50,7 +50,7 @@ public class AccountController {
     @PostMapping("/update-my-info")
     public ResponseDto updateMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                     @RequestPart(value = "updateMyInfoRequest") UpdateMyInfoRequest updateMyInfoRequest,
-                                    @RequestPart(value = "image") MultipartFile multipartFiles) {
+                                    @RequestPart(value = "image") List<MultipartFile> multipartFiles) {
         return accountService.updateMyInfo(customUserDetails, updateMyInfoRequest, multipartFiles);
     }
 
