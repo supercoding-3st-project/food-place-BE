@@ -47,7 +47,7 @@ public class AccountController {
         return accountService.getAccountInfo(customUserDetails);
     }
 
-    @PutMapping("/update-my-info")
+    @PostMapping("/update-my-info")
     public ResponseDto updateMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                     @RequestPart(value = "updateMyInfoRequest") UpdateMyInfoRequest updateMyInfoRequest,
                                     @RequestPart(value = "image") MultipartFile multipartFiles) {
