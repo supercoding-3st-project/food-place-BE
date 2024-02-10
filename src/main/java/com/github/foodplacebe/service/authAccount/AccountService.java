@@ -152,9 +152,9 @@ public class AccountService {
 
 
     @Transactional(transactionManager = "tm")
-    public ResponseDto updateMyInfo(CustomUserDetails customUserDetails, UpdateMyInfoRequest updateMyInfoRequest, MultipartFile multipartFile) {
-        UserEntity user = userJpa.findById(customUserDetails.getUserId())
-                .orElseThrow(() -> new NotFoundException("user 정보를 찾을 수 없습니다", customUserDetails.getUserId()));
+    public ResponseDto updateMyInfo(UpdateMyInfoRequest updateMyInfoRequest, MultipartFile multipartFile) {
+        UserEntity user = userJpa.findById(1)
+                .orElseThrow(() -> new NotFoundException("user 정보를 찾을 수 없습니다", "1"));
 
         if (!(passwordEncoder.matches(updateMyInfoRequest.getPassword(), user.getPassword())))
             throw new BadRequestException("비밀번호가 일치하지 않습니다.", "");
