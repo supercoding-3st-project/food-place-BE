@@ -46,7 +46,7 @@ public class PostPhotosService {
 
     public String uploadProfileImg (String name, MultipartFile multipartFile) {
         String uploadedUrl;
-        if (!multipartFile.isEmpty()){
+        if (multipartFile != null && !multipartFile.isEmpty()){
             try {
                 String fileName = buildFileName(name, multipartFile.getOriginalFilename(), 1);
                 uploadedUrl = uploadImage(multipartFile, fileName);

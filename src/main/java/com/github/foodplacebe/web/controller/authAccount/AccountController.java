@@ -51,9 +51,10 @@ public class AccountController {
 
     @PostMapping("/update-my-info")
     public ResponseDto updateMyInfo(@RequestPart(value = "updateMyInfoRequest") UpdateMyInfoRequest updateMyInfoRequest,
-                                    @RequestPart(value = "image") List<MultipartFile> multipartFiles)
+                                    @RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles)
     {
-        return accountService.updateMyInfo( updateMyInfoRequest, multipartFiles);
+
+        return accountService.updateMyInfo(updateMyInfoRequest, multipartFiles);
     }
 
     @PutMapping("/update-password")

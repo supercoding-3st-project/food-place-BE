@@ -164,7 +164,12 @@ public class AccountService {
             throw new BadRequestException("핸드폰 번호를 닉네임으로 사용할수 없습니다.",updateMyInfoRequest.getNickName());
         }
 
-        String profileImg = postPhotosService.uploadProfileImg(user.getNickName(), multipartFiles.get(0));
+        String profileImg;
+        if (multipartFiles != null && !multipartFiles.isEmpty()){
+            profileImg = postPhotosService.uploadProfileImg(user.getNickName(), multipartFiles.get(0));
+        }else {
+            profileImg = user.getImageUrl();
+        }
 
         user.setImageUrl(profileImg);
         user.setNickName(updateMyInfoRequest.getNickName());
