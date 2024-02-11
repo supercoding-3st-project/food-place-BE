@@ -166,19 +166,25 @@ public class AccountService {
 
 
 
-        String profileImg;
         if (multipartFiles != null && !multipartFiles.isEmpty()){
-            profileImg = postPhotosService.uploadProfileImg(user.getNickName(), multipartFiles.get(0));
-        }else {
-            profileImg = user.getImageUrl();
+            String profileImg = postPhotosService.uploadProfileImg(user.getNickName(), multipartFiles.get(0));
+            user.setImageUrl(profileImg);
         }
 
-        user.setImageUrl(profileImg);
-        user.setNickName(updateMyInfoRequest.getNickName());
-        user.setPhoneNumber(updateMyInfoRequest.getPhoneNum());
-        user.setNeighborhood(updateMyInfoRequest.getNeighborhood());
-        user.setGender(UserEntity.Gender.valueOf(updateMyInfoRequest.getGender()));
-        user.setDateOfBirth(LocalDate.parse(updateMyInfoRequest.getDateOfBirth()));
+        if (updateMyInfoRequest.getNickName() != null && updateMyInfoRequest.getNickName().isEmpty())
+            user.setNickName(updateMyInfoRequest.getNickName());
+
+        if (updateMyInfoRequest.getPhoneNum() != null && updateMyInfoRequest.getPhoneNum().isEmpty())
+            user.setPhoneNumber(updateMyInfoRequest.getPhoneNum());
+
+        if (updateMyInfoRequest.getNeighborhood() != null && updateMyInfoRequest.getNeighborhood().isEmpty())
+            user.setNeighborhood(updateMyInfoRequest.getNeighborhood());
+
+        if (updateMyInfoRequest.getGender() != null && updateMyInfoRequest.getGender().isEmpty())
+            user.setGender(UserEntity.Gender.valueOf(updateMyInfoRequest.getGender()));
+
+        if (updateMyInfoRequest.getDateOfBirth() != null && updateMyInfoRequest.getDateOfBirth().isEmpty())
+            user.setDateOfBirth(LocalDate.parse(updateMyInfoRequest.getDateOfBirth()));
 
         userJpa.save(user);
 
