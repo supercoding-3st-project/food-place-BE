@@ -51,7 +51,7 @@ public class AccountController {
     @PostMapping("/update-my-info")
     public ResponseDto updateMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                     @RequestPart(value = "updateMyInfoRequest") UpdateMyInfoRequest updateMyInfoRequest,
-                                    @RequestPart(value = "image") @Valid List<MultipartFile> multipartFiles) {
+                                    @RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles) {
         return accountService.updateMyInfo(customUserDetails, updateMyInfoRequest, multipartFiles);
     }
 
