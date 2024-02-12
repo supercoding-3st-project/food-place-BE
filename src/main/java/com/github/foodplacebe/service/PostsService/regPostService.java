@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -55,6 +57,7 @@ public class regPostService {
                 .category(postRequest.getCategory())
                 .menu(postRequest.getMenu())
                 .content(postRequest.getContent())
+                .createAt(LocalDateTime.now())
                 .viewCount(0)
                 .build();
         postsJpa.save(newPost);
@@ -62,8 +65,6 @@ public class regPostService {
         if (multipartFiles != null) {
             uploadImage(newPost, multipartFiles);
         }
-
-        postsJpa.save(newPost);
 
         PostResponse response = configurationService.response(newPost);
 

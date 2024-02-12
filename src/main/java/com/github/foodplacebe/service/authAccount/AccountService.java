@@ -202,11 +202,11 @@ public class AccountService {
         if (!(passwordEncoder.matches(password, userEntity.getPassword())))
             throw new BadRequestException("기존 비밀번호가 일치하지 않습니다.", "");
         else if(!updatePassword.matches("^(?=.*[a-zA-Z])(?=.*\\d)[a-zA-Z\\d]+$") ||!(updatePassword.length()>=8&&updatePassword.length()<=20)){
-            throw new BadRequestException("비밀번호는 8자 이상 20자 이하 숫자와 영문자 조합 이어야 합니다.",password);
+            throw new BadRequestException("비밀번호는 8자 이상 20자 이하 숫자와 영문자 조합 이어야 합니다.",updatePassword.length()+"자리");
         } else if (!confirmPassword.equals(updatePassword)) {
-            throw new BadRequestException("비밀번호와 비밀번호 확인이 같지 않습니다.","password : "+updatePassword+", password_confirm : "+confirmPassword);
+            throw new BadRequestException("비밀번호와 비밀번호 확인이 같지 않습니다.","");
         }else if (password.equals(updatePassword)) {
-            throw new BadRequestException("기존 비밀번호와 변경 비밀번호가 일치합니다.", "기존: " + password + ", 변경: " + updatePassword);
+            throw new BadRequestException("기존 비밀번호와 변경 비밀번호가 일치합니다.", "");
         }
 
         userEntity.setPassword(passwordEncoder.encode(updatePassword));
