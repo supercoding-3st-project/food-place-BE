@@ -1,6 +1,8 @@
 package com.github.foodplacebe.config;
 
 import com.github.foodplacebe.config.properties.DataSourceProperties;
+import com.github.foodplacebe.repository.userRoles.Roles;
+import com.github.foodplacebe.repository.userRoles.RolesJpa;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
