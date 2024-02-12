@@ -52,7 +52,11 @@ public class SocialSignUpService {
                 socialAccountDto.setSocialId(userEntity.getSocialId());
                 socialAccountDto.setEmail(email);
                 socialAccountDto.setImageUrl(userEntity.getImageUrl());
-                socialAccountDto.setNickName(userEntity.getNickName());
+                socialAccountDto.setNickName(
+                        userEntity.getNickName().startsWith("(temp)_")?
+                        userEntity.getNickName().replaceAll("\\(temp\\)_", ""):
+                                userEntity.getNickName()
+                );
                 throw new NotFoundSocialAccount(socialAccountDto,"회원가입이 완료되지 않았습니다. 이어서 하시겠습니까?");
             }
 //            else if(userEntity.getStatus().equals("connect"))

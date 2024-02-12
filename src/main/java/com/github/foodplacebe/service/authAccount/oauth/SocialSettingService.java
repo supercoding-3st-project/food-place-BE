@@ -38,6 +38,7 @@ public class SocialSettingService {
     @Transactional(transactionManager = "tm")
     public void socialIdSet(UserEntity userEntity, Long socialId) {
         userEntity.setSocialId(socialId);
+        userJpa.save(userEntity);
     }
 
     @Transactional(transactionManager = "tm")
@@ -61,12 +62,14 @@ public class SocialSettingService {
     @Transactional(transactionManager = "tm")
     public void cancelConnect(UserEntity userEntity) {
         userEntity.setSocialId(null);
+        userJpa.save(userEntity);
     }
 
     @Transactional(transactionManager = "tm")
     public void applySocialId(UserEntity userEntity, Long socialId) {
         try {
             userEntity.setSocialId(socialId-3000000000000000000L);
+            userJpa.save(userEntity);
         }catch (Exception e){
             throw new NotAcceptableException("소셜 연결 실패 소셜 아이디를 설정하지 못했습니다.", socialId.toString());
         }
