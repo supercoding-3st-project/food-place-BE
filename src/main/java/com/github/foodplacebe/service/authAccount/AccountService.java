@@ -148,26 +148,39 @@ public class AccountService {
 
 
     @Transactional(transactionManager = "tm")
-    public ResponseDto updateMyInfo(CustomUserDetails customUserDetails, UpdateMyInfoRequest updateMyInfoRequest, MultipartFile multipartFile) {
+    public ResponseDto updateMyInfo(CustomUserDetails customUserDetails, UpdateMyInfoRequest updateMyInfoRequest, List<MultipartFile> multipartFiles) {
         UserEntity user = userJpa.findById(customUserDetails.getUserId())
                 .orElseThrow(() -> new NotFoundException("user 정보를 찾을 수 없습니다", customUserDetails.getUserId()));
 
         if (!(passwordEncoder.matches(updateMyInfoRequest.getPassword(), user.getPassword())))
             throw new BadRequestException("비밀번호가 일치하지 않습니다.", "");
-        else if (!isValidPhoneNumber(updateMyInfoRequest.getPhoneNum())) {
+        else if (updateMyInfoRequest.getPhoneNum() != null && !updateMyInfoRequest.getPhoneNum().isEmpty() && !isValidPhoneNumber(updateMyInfoRequest.getPhoneNum())) {
             throw new BadRequestException("핸드폰 번호를 확인해주세요.", updateMyInfoRequest.getPhoneNum());
         } else if (isValidPhoneNumber(updateMyInfoRequest.getNickName())){
             throw new BadRequestException("핸드폰 번호를 닉네임으로 사용할수 없습니다.",updateMyInfoRequest.getNickName());
         }
 
-        String profileImg = postPhotosService.uploadProfileImg(user.getNickName(), multipartFile);
 
-        user.setImageUrl(profileImg);
-        user.setNickName(updateMyInfoRequest.getNickName());
-        user.setPhoneNumber(updateMyInfoRequest.getPhoneNum());
-        user.setNeighborhood(updateMyInfoRequest.getNeighborhood());
-        user.setGender(UserEntity.Gender.valueOf(updateMyInfoRequest.getGender()));
-        user.setDateOfBirth(LocalDate.parse(updateMyInfoRequest.getDateOfBirth()));
+
+        if (multipartFiles != null && !multipartFiles.isEmpty()){
+            String profileImg = postPhotosService.uploadProfileImg(user.getNickName(), multipartFiles.get(0));
+            user.setImageUrl(profileImg);
+        }
+
+        if (updateMyInfoRequest.getNickName() != null && !updateMyInfoRequest.getNickName().isEmpty())
+            user.setNickName(updateMyInfoRequest.getNickName());
+
+        if (updateMyInfoRequest.getPhoneNum() != null && !updateMyInfoRequest.getPhoneNum().isEmpty())
+            user.setPhoneNumber(updateMyInfoRequest.getPhoneNum());
+
+        if (updateMyInfoRequest.getNeighborhood() != null && !updateMyInfoRequest.getNeighborhood().isEmpty())
+            user.setNeighborhood(updateMyInfoRequest.getNeighborhood());
+
+        if (updateMyInfoRequest.getGender() != null && !updateMyInfoRequest.getGender().isEmpty())
+            user.setGender(UserEntity.Gender.valueOf(updateMyInfoRequest.getGender()));
+
+        if (updateMyInfoRequest.getDateOfBirth() != null && !updateMyInfoRequest.getDateOfBirth().isEmpty())
+            user.setDateOfBirth(LocalDate.parse(updateMyInfoRequest.getDateOfBirth()));
 
         userJpa.save(user);
 

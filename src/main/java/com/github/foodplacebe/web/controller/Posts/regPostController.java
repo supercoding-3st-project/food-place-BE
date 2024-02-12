@@ -3,6 +3,7 @@ package com.github.foodplacebe.web.controller.Posts;
 import com.github.foodplacebe.repository.posts.PostsJpa;
 import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
 import com.github.foodplacebe.service.PostsService.regPostService;
+import com.github.foodplacebe.web.dto.postDto.ModifyPostDto;
 import com.github.foodplacebe.web.dto.postDto.PostRequest;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,9 +33,10 @@ public class regPostController {
     @Operation(summary = "맛집 게시물 수정")
     @PutMapping("/modify-post/{postId}")
     public ResponseDto updatePost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                  @RequestPart PostRequest postRequest,
+                                  @RequestPart(value = "modifyPost", required = false) ModifyPostDto modifyPostDto,
+                                  @RequestPart(value = "images", required = false) List<MultipartFile> multipartFiles,
                                   @PathVariable Integer postId){
 
-        return regPostService.updatePost(customUserDetails, postRequest, postId);
+        return regPostService.updatePost(customUserDetails, modifyPostDto, multipartFiles, postId);
     }
 }

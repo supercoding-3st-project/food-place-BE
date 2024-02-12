@@ -8,6 +8,7 @@ import com.github.foodplacebe.web.dto.account.UpdateMyInfoRequest;
 import com.github.foodplacebe.web.dto.account.UpdatePasswordRequest;
 import com.github.foodplacebe.web.dto.postDto.PostRequest;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -47,10 +48,10 @@ public class AccountController {
         return accountService.getAccountInfo(customUserDetails);
     }
 
-    @PutMapping("/update-my-info")
+    @PostMapping("/update-my-info")
     public ResponseDto updateMyInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                     @RequestPart(value = "updateMyInfoRequest") UpdateMyInfoRequest updateMyInfoRequest,
-                                    @RequestPart(value = "image") MultipartFile multipartFiles) {
+                                    @RequestPart(value = "image", required = false) List<MultipartFile> multipartFiles) {
         return accountService.updateMyInfo(customUserDetails, updateMyInfoRequest, multipartFiles);
     }
 
