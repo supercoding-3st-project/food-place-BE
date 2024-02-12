@@ -1,8 +1,6 @@
 package com.github.foodplacebe.service.authAccount;
 
 import com.github.foodplacebe.repository.userDetails.CustomUserDetails;
-import com.github.foodplacebe.repository.userRoles.RolesJpa;
-import com.github.foodplacebe.repository.userRoles.UserRolesJpa;
 import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
 import com.github.foodplacebe.service.PostsService.PostPhotosService;
@@ -36,8 +34,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class AccountService {
     private final UserJpa userJpa;
-    private final UserRolesJpa userRolesJpa;
-    private final RolesJpa rolesJpa;
     private final PasswordEncoder passwordEncoder;
     private final PostPhotosService postPhotosService;
 

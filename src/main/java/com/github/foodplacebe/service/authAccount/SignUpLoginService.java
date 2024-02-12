@@ -1,8 +1,9 @@
 package com.github.foodplacebe.service.authAccount;
 
+import com.github.foodplacebe.config.JpaConfig;
+import com.github.foodplacebe.config.UserSettingConfig;
 import com.github.foodplacebe.config.security.JwtTokenConfig;
 import com.github.foodplacebe.repository.userRoles.Roles;
-import com.github.foodplacebe.repository.userRoles.RolesJpa;
 import com.github.foodplacebe.repository.userRoles.UserRoles;
 import com.github.foodplacebe.repository.userRoles.UserRolesJpa;
 import com.github.foodplacebe.repository.users.BlacklistedToken;
@@ -39,8 +40,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SignUpLoginService {
     private final UserJpa userJpa;
-    private final RolesJpa rolesJpa;
     private final UserRolesJpa userRolesJpa;
+    private final UserSettingConfig userSettingConfig;
     private final JwtTokenConfig jwtTokenConfig;
 
 
@@ -85,7 +86,7 @@ public class SignUpLoginService {
 
         signUpRequest.setPassword(passwordEncoder.encode(password));
 
-        Roles roles = rolesJpa.findByName("ROLE_USER");
+        Roles roles = userSettingConfig.getNormalUserRole();
 
 
         if(!(signUpRequest.getGender().equals("남성")||signUpRequest.getGender().equals("여성"))) throw new BadRequestException("성별은 남성 혹은 여성 이어야 합니다.", signUpRequest.getGender());
@@ -156,8 +157,6 @@ public class SignUpLoginService {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestEmail, loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            List<String> roles = userEntity.getUserRoles().stream()
-                    .map(u->u.getRoles()).map(r->r.getName()).toList();
           
             SignUpResponse signUpResponse = UserMapper.INSTANCE.userEntityToSignUpResponse(userEntity);
             ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.", signUpResponse);
