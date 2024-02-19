@@ -82,4 +82,24 @@ public class SearchPostService {
             return new ResponseDto(200, "이름으로 검색 완료", searchResponses);
         }
     }
+
+    @Transactional(transactionManager = "tm")
+    public ResponseDto findKeyword(String keyword, Pageable pageable) {
+        Page<Posts> postsList = postsJpa.findByAddressOrMenuOrNameContaining(keyword, pageable);
+
+        if (postsList.isEmpty()) {
+            return new ResponseDto(400, "해당하는 포스트가 없습니다.", "address: " + keyword);
+        } else {
+            List<Posts> allPosts = postsList.getContent();
+
+            List<SearchResponse> searchResponses = new ArrayList<>();
+
+            for (Posts post : allPosts) {
+                int likeCount = postFavoriteJpa.countByPostsPostId(post.getPostId());
+                searchResponses.add(new SearchResponse(post, likeCount));
+            }
+
+            return new ResponseDto(200, "키워드로 검색 완료", searchResponses);
+        }
+    }
 }

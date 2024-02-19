@@ -62,6 +62,9 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
 
     Page<Posts> findByNameContaining(String name, Pageable pageable);
 
+    @Query("SELECT p FROM Posts p WHERE p.address LIKE %:keyword% OR p.menu LIKE %:keyword% OR p.name LIKE %:keyword%")
+    Page<Posts> findByAddressOrMenuOrNameContaining(String keyword, Pageable pageable);
+
     List<Posts> findByUserEntity(UserEntity userEntity);
 
 //    @Query(

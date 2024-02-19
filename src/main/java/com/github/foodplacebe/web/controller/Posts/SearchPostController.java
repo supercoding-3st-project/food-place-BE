@@ -53,4 +53,17 @@ public class SearchPostController {
         Pageable pageable = PageRequest.of(page, size);
         return searchPostService.findName(name,pageable);
     }
+
+    @Operation(summary = "키워드로 검색")
+    @GetMapping("/search")
+    public ResponseDto findKeyword(@RequestParam(value = "keyword", required = false) String keyword,
+                                @RequestParam(value="page", defaultValue = "0") int page,
+                                @RequestParam(value="size", defaultValue = "30") int size){
+
+        log.info("Received request to search for name: {}", keyword);
+
+        Pageable pageable = PageRequest.of(page, size);
+        return searchPostService.findKeyword(keyword,pageable);
+    }
+
 }
