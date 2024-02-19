@@ -30,9 +30,10 @@ public class PostService {
 
         UserEntity userEntity = null;
         if (customUserDetails != null) {
-            userEntity = userJpa.findByEmailJoin(customUserDetails.getUsername())
-                    .orElseThrow(()->new NotFoundException("계정 정보를 찾을 수 없습니다.",customUserDetails.getUsername()));
-        }
+//            userEntity = userJpa.findByEmailJoin(customUserDetails.getUsername())
+//                    .orElseThrow(()->new NotFoundException("계정 정보를 찾을 수 없습니다.",customUserDetails.getUsername()));
+            userEntity = userJpa.findById(customUserDetails.getUserId())
+                    .orElseThrow(()->new NotFoundException("계정 정보를 찾을 수 없습니다.",customUserDetails.getUsername()));        }
 
         int userId;
 
