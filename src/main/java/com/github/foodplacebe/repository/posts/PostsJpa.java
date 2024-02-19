@@ -46,7 +46,7 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
                     "p.postId, p.name, p.neighborhood, p.category, p.menu, p.viewCount, p.mainPhoto, p.createAt, SIZE(p.postFavorites), pf.userEntity.userId, 'Y' as favoriteYn) " +
                     "FROM Posts p " +
                     "LEFT JOIN p.postFavorites pf " +
-                    "ON p.postId = pf.posts.postId AND (:userId = 0 OR pf.userEntity.userId = :userId) " +
+                    "ON (:userId <> 0 AND p.postId = pf.posts.postId AND pf.userEntity.userId = :userId) " +
                     "WHERE (:neighborhood is null OR p.neighborhood = :neighborhood OR :neighborhood = '') " +
                     "AND (:category is null OR p.category = :category OR :category = '') " +
                     "ORDER BY " +

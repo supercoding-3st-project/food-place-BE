@@ -2,13 +2,10 @@ package com.github.foodplacebe.service.authAccount.oauth;
 
 import com.github.foodplacebe.config.security.JwtTokenConfig;
 import com.github.foodplacebe.service.mappers.UserMapper;
-import com.github.foodplacebe.web.dto.account.AccountDto;
 import com.github.foodplacebe.web.dto.account.SignUpResponse;
 import com.github.foodplacebe.web.dto.account.SocialAccountDto;
 import com.github.foodplacebe.web.dto.account.oauth.server.OAuthInfoResponse;
 import com.github.foodplacebe.web.dto.account.oauth.client.OAuthLoginParams;
-import com.github.foodplacebe.repository.userRoles.RolesJpa;
-import com.github.foodplacebe.repository.userRoles.UserRolesJpa;
 import com.github.foodplacebe.repository.users.UserEntity;
 import com.github.foodplacebe.repository.users.UserJpa;
 import com.github.foodplacebe.service.exceptions.*;
@@ -26,8 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SocialSignUpService {
     private final UserJpa userJpa;
-    private final RolesJpa rolesJpa;
-    private final UserRolesJpa userRolesJpa;
     private final JwtTokenConfig jwtTokenConfig;
     private final RequestOAuthInfoService requestOAuthInfoService;
     private final SocialSettingService socialSettingService;
@@ -57,7 +52,11 @@ public class SocialSignUpService {
                 socialAccountDto.setSocialId(userEntity.getSocialId());
                 socialAccountDto.setEmail(email);
                 socialAccountDto.setImageUrl(userEntity.getImageUrl());
-                socialAccountDto.setNickName(userEntity.getNickName());
+                socialAccountDto.setNickName(
+                        userEntity.getNickName().startsWith("(temp)_")?
+                        userEntity.getNickName().replaceAll("\\(temp\\)_", ""):
+                                userEntity.getNickName()
+                );
                 throw new NotFoundSocialAccount(socialAccountDto,"회원가입이 완료되지 않았습니다. 이어서 하시겠습니까?");
             }
 //            else if(userEntity.getStatus().equals("connect"))
@@ -152,6 +151,8 @@ public class SocialSignUpService {
                 throw new BadRequestException("비밀번호는 8자 이상 20자 이하 숫자와 영문자 조합 이어야 합니다.",password);
             } else if (!signUpRequest.getPasswordConfirm().equals(password)) {
                 throw new BadRequestException("비밀번호와 비밀번호 확인이 같지 않습니다.","password : "+password+", password_confirm : "+signUpRequest.getPasswordConfirm());
+            } else if (!(signUpRequest.getGender().equals("남성")||signUpRequest.getGender().equals("여성"))) {
+                throw new BadRequestException("성별은 남성 또는 여성이어야 합니다.", signUpRequest.getGender());
             }
 
 

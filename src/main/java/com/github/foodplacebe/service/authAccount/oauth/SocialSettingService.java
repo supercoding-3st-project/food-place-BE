@@ -1,7 +1,8 @@
 package com.github.foodplacebe.service.authAccount.oauth;
 
+import com.github.foodplacebe.config.JpaConfig;
+import com.github.foodplacebe.config.UserSettingConfig;
 import com.github.foodplacebe.repository.userRoles.Roles;
-import com.github.foodplacebe.repository.userRoles.RolesJpa;
 import com.github.foodplacebe.repository.userRoles.UserRoles;
 import com.github.foodplacebe.repository.userRoles.UserRolesJpa;
 import com.github.foodplacebe.repository.users.UserEntity;
@@ -28,14 +29,16 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class SocialSettingService {
     private final UserJpa userJpa;
-    private final RolesJpa rolesJpa;
+
     private final UserRolesJpa userRolesJpa;
+    private final UserSettingConfig userSettingConfig;
 
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(transactionManager = "tm")
     public void socialIdSet(UserEntity userEntity, Long socialId) {
         userEntity.setSocialId(socialId);
+        userJpa.save(userEntity);
     }
 
     @Transactional(transactionManager = "tm")
@@ -59,12 +62,14 @@ public class SocialSettingService {
     @Transactional(transactionManager = "tm")
     public void cancelConnect(UserEntity userEntity) {
         userEntity.setSocialId(null);
+        userJpa.save(userEntity);
     }
 
     @Transactional(transactionManager = "tm")
     public void applySocialId(UserEntity userEntity, Long socialId) {
         try {
             userEntity.setSocialId(socialId-3000000000000000000L);
+            userJpa.save(userEntity);
         }catch (Exception e){
             throw new NotAcceptableException("소셜 연결 실패 소셜 아이디를 설정하지 못했습니다.", socialId.toString());
         }
@@ -86,7 +91,8 @@ public class SocialSettingService {
         updateUser.setImageUrl(null);
         existingUser.setDeletionDate(null);
         BeanUtils.copyProperties(updateUser, existingUser, getNullPropertyNames(updateUser));
-        Roles roles = rolesJpa.findByName("ROLE_USER");
+        Roles roles = userSettingConfig.getNormalUserRole();
+        userJpa.save(existingUser);
         userRolesJpa.save(UserRoles.builder()
                 .userEntity(existingUser)
                 .roles(roles)
