@@ -26,14 +26,14 @@ public class ConfigurationService {
 
     public String determineNeighborhood(String address){
         String postNeighborhood;
-        if (address.contains("서울특별시")) postNeighborhood = "서울";
-        else if (address.contains("경기도") || address.contains("인천광역시")) postNeighborhood = "경기/인천";
-        else if (address.contains("부산광역시") || address.contains("경상남도")) postNeighborhood = "부산/경남";
-        else if (address.contains("대구광역시") || address.contains("경상북도")) postNeighborhood = "대구/경북";
-        else if (address.contains("대전광역시") || address.contains("충청")) postNeighborhood = "대전/충청";
-        else if (address.contains("광주시") || address.contains("전라")) postNeighborhood = "광주/전라";
-        else if (address.contains("제주특별자치도")) postNeighborhood = "제주";
-        else if (address.contains("강원특별자치도")) postNeighborhood = "강원";
+        if (address.contains("서울") ) postNeighborhood = "서울";
+        else if (address.contains("경기도") || address.contains("인천")) postNeighborhood = "경기/인천";
+        else if (address.contains("부산") || address.contains("경상남도")) postNeighborhood = "부산/경남";
+        else if (address.contains("대구") || address.contains("경상북도")) postNeighborhood = "대구/경북";
+        else if (address.contains("대전") || address.contains("충청")) postNeighborhood = "대전/충청";
+        else if (address.contains("광주") || address.contains("전라")) postNeighborhood = "광주/전라";
+        else if (address.contains("제주")) postNeighborhood = "제주";
+        else if (address.contains("강원")) postNeighborhood = "강원";
         else throw new BadRequestException("주소지 오류", address);
 
         return postNeighborhood;
