@@ -22,4 +22,6 @@ public interface PostFavoriteJpa extends JpaRepository<PostFavorite, Integer> {
 
     List<PostFavorite> findByUserEntity(UserEntity userEntity);
     int countByPostsPostId(Integer postId);
+
+    Boolean existsByUserEntityAndPosts(UserEntity userEntity, Posts posts);
 }
