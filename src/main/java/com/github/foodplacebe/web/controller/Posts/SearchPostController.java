@@ -64,11 +64,12 @@ public class SearchPostController {
     public ResponseDto findKeyword(@RequestParam(value = "keyword", required = false) String keyword,
                                    @RequestParam(value="page", defaultValue = "0") int page,
                                    @RequestParam(value="size", defaultValue = "30") int size,
-                                   @AuthenticationPrincipal CustomUserDetails customUserDetails){
+                                   @AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                   Pageable pageable){
 
         log.info("Received request to search for name: {}", keyword);
 
-        Pageable pageable = PageRequest.of(page, size);
+//        Pageable pageable = PageRequest.of(page, size);
         return searchPostService.findKeyword(keyword,pageable, customUserDetails);
     }
 
