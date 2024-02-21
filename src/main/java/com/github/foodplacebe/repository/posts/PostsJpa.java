@@ -55,5 +55,6 @@ public interface PostsJpa extends JpaRepository<Posts, Integer> {
                     "GROUP BY p.postId "
     )
     List<FindPostsResponse> findFiveRelatedPosts(String address, String name, Integer postId);
+
 }
 
