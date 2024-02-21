@@ -11,6 +11,7 @@ import com.github.foodplacebe.web.dto.postDto.SearchResponse;
 import com.github.foodplacebe.web.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,7 +119,7 @@ public class SearchPostService {
                 searchResponses.add(new SearchResponse(post, likeCount, favoriteYn));
             }
 
-            return new ResponseDto(200, "키워드로 검색 완료", searchResponses);
+            return new ResponseDto(200, "키워드로 검색 완료", new PageImpl<>(searchResponses,pageable, searchResponses.size()));
         }
     }
 }
