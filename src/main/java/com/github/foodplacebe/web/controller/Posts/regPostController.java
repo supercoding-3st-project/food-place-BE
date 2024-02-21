@@ -31,7 +31,7 @@ public class regPostController {
     }
 
     @Operation(summary = "맛집 게시물 수정")
-    @PutMapping("/modify-post/{postId}")
+    @PostMapping("/modify-post/{postId}")
     public ResponseDto updatePost(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                   @RequestPart(value = "modifyPost", required = false) ModifyPostDto modifyPostDto,
                                   @RequestPart(value = "images", required = false) List<MultipartFile> multipartFiles,

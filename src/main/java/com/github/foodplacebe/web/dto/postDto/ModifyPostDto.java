@@ -36,25 +36,25 @@ public class ModifyPostDto {
             this.name = modifyPost.getName();
         }
         if(Objects.isNull(modifyPostDto.getAddress())){
-            this.name = modifyPost.getAddress();
+            this.address = modifyPost.getAddress();
         }
         if(Objects.isNull(modifyPostDto.getDetailAddress())){
-            this.name = modifyPost.getDetailAddress();
+            this.detailAddress = modifyPost.getDetailAddress();
         }
         if(Objects.isNull(modifyPostDto.getLatitude())){
-            this.name = modifyPost.getLatitude();
+            this.latitude = modifyPost.getLatitude();
         }
         if(Objects.isNull(modifyPostDto.getLongitude())){
-            this.name = modifyPost.getLongitude();
+            this.longitude = modifyPost.getLongitude();
         }
         if(Objects.isNull(modifyPostDto.getContactNum())){
-            this.name = modifyPost.getContactNum();
+            this.contactNum = modifyPost.getContactNum();
         }
         if(Objects.isNull(modifyPostDto.getMenu())){
-            this.name = modifyPost.getMenu();
+            this.menu = modifyPost.getMenu();
         }
         if(Objects.isNull(modifyPostDto.getContent())){
-            this.name = modifyPost.getContent();
+            this.content = modifyPost.getContent();
         }
         if(Objects.isNull(modifyPostDto.getCategory())){
             this.category = modifyPost.getCategory();
