@@ -1,6 +1,5 @@
 package com.github.foodplacebe.service.authAccount;
 
-import com.github.foodplacebe.config.JpaConfig;
 import com.github.foodplacebe.config.UserSettingConfig;
 import com.github.foodplacebe.config.security.JwtTokenConfig;
 import com.github.foodplacebe.repository.userRoles.Roles;
@@ -25,6 +24,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +50,7 @@ public class SignUpLoginService {
 
 
     //회원가입 로직
-    @Transactional(transactionManager = "tm")
+    @Transactional
     public ResponseDto signUp(SignUpRequest signUpRequest) {
         String email = signUpRequest.getEmail();
 //        String phoneNumber = signUpRequest.getPhoneNumber();
@@ -153,11 +153,10 @@ public class SignUpLoginService {
                     ), loginRequest.getPassword());
                 }
             }
-//            String email = userEntity.getEmail();
+//            String email = userEntity.getEmai l();
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestEmail, loginRequest.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-          
+
             SignUpResponse signUpResponse = UserMapper.INSTANCE.userEntityToSignUpResponse(userEntity);
             ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), "로그인에 성공 하였습니다.", signUpResponse);
 
