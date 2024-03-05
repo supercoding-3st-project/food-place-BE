@@ -28,7 +28,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         PrintWriter writer = response.getWriter();
         ErrorResponse errorResponse = new ErrorResponse
                 (HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name(),
-                        isToken?"로그인이 만료 되었습니다.":"로그인이 필요 합니다.",
+                        isToken? authException.getLocalizedMessage():"로그인이 필요 합니다.",
                         request.getHeader("Token"));
 
         ObjectMapper objectMapper = new ObjectMapper();

@@ -53,6 +53,7 @@ public class KakaoApiClient implements OAuthApiClient {
         body.add("client_id", clientId);
         body.add("client_secret", secretKey);
 
+
         HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
         try {
